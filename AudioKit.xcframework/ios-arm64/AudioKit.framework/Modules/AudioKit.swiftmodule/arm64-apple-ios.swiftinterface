@@ -1,0 +1,3501 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)
+// swift-module-flags: -target arm64-apple-ios14.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name AudioKit
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVFAudio
+import AVFoundation
+import Accelerate
+@_exported import AudioKit
+import AudioToolbox
+import CoreAudio
+import CoreAudioKit
+import CoreMIDI
+import CryptoKit
+import Darwin
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os.log
+import os
+public class MIDI {
+  public static var sharedInstance: AudioKit.MIDI
+  public var client: CoreMIDI.MIDIClientRef
+  public var inputPorts: [CoreMIDI.MIDIUniqueID : CoreMIDI.MIDIPortRef]
+  public var virtualInputs: [CoreMIDI.MIDIPortRef]
+  public var outputPort: CoreMIDI.MIDIPortRef
+  public var virtualOutputs: [CoreMIDI.MIDIPortRef]
+  public var endpoints: [CoreMIDI.MIDIUniqueID : CoreMIDI.MIDIEndpointRef]
+  public var listeners: [any AudioKit.MIDIListener]
+  public var transformers: [any AudioKit.MIDITransformer]
+  public init()
+  @objc deinit
+}
+extension AVFAudio.AVAudioPCMBuffer {
+  public var md5: Swift.String {
+    get
+  }
+  public var isSilent: Swift.Bool {
+    get
+  }
+  public func append(_ buffer: AVFAudio.AVAudioPCMBuffer)
+  public func append(_ buffer: AVFAudio.AVAudioPCMBuffer, startingFrame: AVFAudio.AVAudioFramePosition, frameCount: AVFAudio.AVAudioFrameCount)
+  @discardableResult
+  public func copy(from buffer: AVFAudio.AVAudioPCMBuffer, readOffset: AVFAudio.AVAudioFrameCount = 0, frames: AVFAudio.AVAudioFrameCount = 0) -> AVFAudio.AVAudioFrameCount
+  public func copyFrom(startSample: AVFAudio.AVAudioFrameCount) -> AVFAudio.AVAudioPCMBuffer?
+  public func copyTo(count: AVFAudio.AVAudioFrameCount) -> AVFAudio.AVAudioPCMBuffer?
+  public func extract(from startTime: Foundation.TimeInterval, to endTime: Foundation.TimeInterval) -> AVFAudio.AVAudioPCMBuffer?
+}
+@objc @_inheritsConvenienceInitializers open class MIDISystemRealTimeListener : ObjectiveC.NSObject {
+  public enum SRTState {
+    case stopped
+    case playing
+    case paused
+    public static func == (a: AudioKit.MIDISystemRealTimeListener.SRTState, b: AudioKit.MIDISystemRealTimeListener.SRTState) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension AudioKit.MIDISystemRealTimeListener : AudioKit.MIDIListener {
+  public func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISetupChange()
+  public func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  public func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+}
+extension AudioKit.MIDISystemRealTimeListener {
+  public func addObserver(_ observer: any AudioKit.MIDISystemRealTimeObserver)
+  public func removeObserver(_ observer: any AudioKit.MIDISystemRealTimeObserver)
+  public func removeAllObservers()
+}
+@available(iOS 8.0, *)
+public class AppleDistortion : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  public var dryWetMix: AudioKit.AUValue {
+    get
+    set
+  }
+  public var preGain: AudioKit.AUValue {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, dryWetMix: AudioKit.AUValue = 50, preGain: AudioKit.AUValue = -6)
+  public func loadFactoryPreset(_ preset: AVFAudio.AVAudioUnitDistortionPreset)
+  @objc deinit
+}
+@available(iOS 8.0, *)
+extension AVFAudio.AVAudioUnitDistortionPreset {
+  public static var allCases: [AVFAudio.AVAudioUnitDistortionPreset]
+  public var name: Swift.String {
+    get
+  }
+  public static var defaultValue: AVFAudio.AVAudioUnitDistortionPreset {
+    get
+  }
+  public var next: AVFAudio.AVAudioUnitDistortionPreset {
+    get
+  }
+  public var previous: AVFAudio.AVAudioUnitDistortionPreset {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class MIDIHelper {
+  public static func convertTo16Bit(msb: AudioKit.MIDIByte, lsb: AudioKit.MIDIByte) -> Swift.UInt16
+  public static func convertTo32Bit(msb: AudioKit.MIDIByte, data1: AudioKit.MIDIByte, data2: AudioKit.MIDIByte, lsb: AudioKit.MIDIByte) -> Swift.UInt32
+  public static func convertToString(bytes: [AudioKit.MIDIByte]) -> Swift.String
+  public static func convertToASCII(bytes: [AudioKit.MIDIByte]) -> Swift.String?
+  @objc deinit
+}
+open class BaseTap {
+  public var bufferSize: Swift.UInt32 {
+    get
+  }
+  public var isStarted: Swift.Bool {
+    get
+  }
+  public var bus: Swift.Int {
+    get
+    set
+  }
+  public var input: any AudioKit.Node {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, bufferSize: Swift.UInt32, callbackQueue: Dispatch.DispatchQueue)
+  public func start()
+  open func doHandleTapBlock(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime)
+  open func stop()
+  public func dispose()
+  @objc deinit
+}
+public class Distortion : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let delayDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($delay) public var delay: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $delay: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let decayDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($decay) public var decay: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $decay: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let delayMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($delayMix) public var delayMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $delayMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModFreq1Def: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModFreq1) public var ringModFreq1: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModFreq1: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModFreq2Def: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModFreq2) public var ringModFreq2: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModFreq2: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModBalanceDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModBalance) public var ringModBalance: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModBalance: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModMix) public var ringModMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let decimationDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($decimation) public var decimation: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $decimation: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let roundingDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($rounding) public var rounding: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $rounding: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let decimationMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($decimationMix) public var decimationMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $decimationMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let linearTermDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($linearTerm) public var linearTerm: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $linearTerm: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let squaredTermDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($squaredTerm) public var squaredTerm: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $squaredTerm: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let cubicTermDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($cubicTerm) public var cubicTerm: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $cubicTerm: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let polynomialMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($polynomialMix) public var polynomialMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $polynomialMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let softClipGainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($softClipGain) public var softClipGain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $softClipGain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let finalMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($finalMix) public var finalMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $finalMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, delay: AudioKit.AUValue = delayDef.defaultValue, decay: AudioKit.AUValue = decayDef.defaultValue, delayMix: AudioKit.AUValue = delayMixDef.defaultValue, ringModFreq1: AudioKit.AUValue = ringModFreq1Def.defaultValue, ringModFreq2: AudioKit.AUValue = ringModFreq2Def.defaultValue, ringModBalance: AudioKit.AUValue = ringModBalanceDef.defaultValue, ringModMix: AudioKit.AUValue = ringModMixDef.defaultValue, decimation: AudioKit.AUValue = decimationDef.defaultValue, rounding: AudioKit.AUValue = roundingDef.defaultValue, decimationMix: AudioKit.AUValue = decimationMixDef.defaultValue, linearTerm: AudioKit.AUValue = linearTermDef.defaultValue, squaredTerm: AudioKit.AUValue = squaredTermDef.defaultValue, cubicTerm: AudioKit.AUValue = cubicTermDef.defaultValue, polynomialMix: AudioKit.AUValue = polynomialMixDef.defaultValue, softClipGain: AudioKit.AUValue = softClipGainDef.defaultValue, finalMix: AudioKit.AUValue = finalMixDef.defaultValue)
+  @objc deinit
+}
+public class MultiSegmentAudioPlayer : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var playerNode: AVFAudio.AVAudioPlayerNode {
+    get
+  }
+  public var mixerNode: AVFAudio.AVAudioMixerNode {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var volume: AudioKit.AUValue {
+    get
+    set
+  }
+  public init()
+  public func play()
+  public func stop()
+  public func playSegments(audioSegments: [any AudioKit.StreamableAudioSegment], referenceTimeStamp: Foundation.TimeInterval = 0, referenceNowTime: AVFAudio.AVAudioTime? = nil, processingDelay: Foundation.TimeInterval = 0)
+  public func scheduleSegments(audioSegments: [any AudioKit.StreamableAudioSegment], referenceTimeStamp: Foundation.TimeInterval = 0, referenceNowTime: AVFAudio.AVAudioTime? = nil, processingDelay: Foundation.TimeInterval = 0)
+  @objc deinit
+}
+extension AudioKit.MultiSegmentAudioPlayer : AudioKit.HasInternalConnections {
+  public func makeInternalConnections()
+}
+public protocol StreamableAudioSegment {
+  var audioFile: AVFAudio.AVAudioFile { get }
+  var playbackStartTime: Foundation.TimeInterval { get }
+  var fileStartTime: Foundation.TimeInterval { get }
+  var fileEndTime: Foundation.TimeInterval { get }
+  var completionHandler: AVFAudio.AVAudioNodeCompletionHandler? { get }
+}
+public struct NodeParameterDef {
+  public var identifier: Swift.String
+  public var name: Swift.String
+  public var address: AudioToolbox.AUParameterAddress
+  public var defaultValue: AudioKit.AUValue
+  public var range: Swift.ClosedRange<AudioKit.AUValue>
+  public var unit: AudioToolbox.AudioUnitParameterUnit
+  public var flags: AudioToolbox.AudioUnitParameterOptions
+  public init(identifier: Swift.String, name: Swift.String, address: AudioToolbox.AUParameterAddress, defaultValue: AudioKit.AUValue, range: Swift.ClosedRange<AudioKit.AUValue>, unit: AudioToolbox.AudioUnitParameterUnit, flags: AudioToolbox.AudioUnitParameterOptions = .default)
+}
+public class NodeParameter {
+  public var avAudioNode: AVFAudio.AVAudioNode! {
+    get
+  }
+  public var parameter: AudioToolbox.AUParameter! {
+    get
+  }
+  public var def: AudioKit.NodeParameterDef
+  public var value: AudioKit.AUValue {
+    get
+    set
+  }
+  public var boolValue: Swift.Bool {
+    get
+    set
+  }
+  public var minValue: AudioKit.AUValue {
+    get
+  }
+  public var maxValue: AudioKit.AUValue {
+    get
+  }
+  public var range: Swift.ClosedRange<AudioKit.AUValue> {
+    get
+  }
+  public init(_ def: AudioKit.NodeParameterDef)
+  public var renderObserverToken: Swift.Int?
+  public func ramp(to value: AudioKit.AUValue, duration: Swift.Float, delay: Swift.Float = 0)
+  public func recordAutomation(callback: @escaping (AudioToolbox.AUParameterAutomationEvent) -> Swift.Void)
+  public func stopRecording()
+  public func associate(with avAudioNode: AVFAudio.AVAudioNode)
+  public func associate(with avAudioNode: AVFAudio.AVAudioNode, parameter: AudioToolbox.AUParameter)
+  public func beginTouch(value: AudioKit.AUValue? = nil)
+  public func endTouch(value: AudioKit.AUValue? = nil)
+  @objc deinit
+}
+extension AudioKit.NodeParameter : Swift.Identifiable {
+  public typealias ID = Swift.ObjectIdentifier
+}
+public protocol NodeParameterType {
+  func toAUValue() -> AudioKit.AUValue
+  init(_ value: AudioKit.AUValue)
+}
+extension Swift.Bool : AudioKit.NodeParameterType {
+  public func toAUValue() -> AudioKit.AUValue
+  public init(_ value: AudioKit.AUValue)
+}
+extension Swift.Float : AudioKit.NodeParameterType {
+  public func toAUValue() -> AudioKit.AUValue
+}
+@propertyWrapper public struct Parameter<Value> where Value : AudioKit.NodeParameterType {
+  public init(_ def: AudioKit.NodeParameterDef)
+  public var wrappedValue: Value {
+    get
+    set
+  }
+  public var projectedValue: AudioKit.NodeParameter {
+    get
+    set
+  }
+}
+public class PeakLimiter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let attackTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($attackTime) public var attackTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $attackTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let decayTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($decayTime) public var decayTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $decayTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let preGainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($preGain) public var preGain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $preGain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, attackTime: AudioKit.AUValue = attackTimeDef.defaultValue, decayTime: AudioKit.AUValue = decayTimeDef.defaultValue, preGain: AudioKit.AUValue = preGainDef.defaultValue)
+  @objc deinit
+}
+open class RawBufferTap : AudioKit.BaseTap {
+  public typealias Handler = (AVFAudio.AVAudioPCMBuffer, AVFAudio.AVAudioTime) -> Swift.Void
+  public init(_ input: any AudioKit.Node, bufferSize: Swift.UInt32 = 4096, callbackQueue: Dispatch.DispatchQueue = .main, handler: @escaping AudioKit.RawBufferTap.Handler)
+  override public func doHandleTapBlock(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime)
+  @objc deinit
+}
+public struct MIDIFileTrack {
+  public var channelEvents: [AudioKit.MIDIEvent] {
+    get
+  }
+  public var events: [AudioKit.MIDIEvent] {
+    get
+  }
+  public var metaEvents: [AudioKit.MIDICustomMetaEvent] {
+    get
+  }
+  public var length: Swift.Double {
+    get
+  }
+  public var name: Swift.String? {
+    get
+  }
+}
+public class FormatConverter {
+  public var inputURL: Foundation.URL?
+  public var outputURL: Foundation.URL?
+  public var options: AudioKit.FormatConverter.Options?
+  public init(inputURL: Foundation.URL, outputURL: Foundation.URL, options: AudioKit.FormatConverter.Options? = nil)
+  @objc deinit
+  public func start(completionHandler: AudioKit.FormatConverter.FormatConverterCallback? = nil)
+}
+public enum AudioFileFormat : Swift.String {
+  case aac
+  case aif
+  case aifc
+  case aiff
+  case au
+  case caf
+  case m4a
+  case m4v
+  case mov
+  case mp3
+  case mp4
+  case sd2
+  case snd
+  case ts
+  case unknown
+  case wav
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension AudioKit.FormatConverter {
+  public typealias FormatConverterCallback = (_ error: (any Swift.Error)?) -> Swift.Void
+  public static let outputFormats: [AudioKit.AudioFileFormat]
+  public static let defaultOutputFormat: AudioKit.AudioFileFormat
+  public static let inputFormats: [AudioKit.AudioFileFormat]
+  public enum BitDepthRule {
+    case lessThanOrEqual
+    case any
+    public static func == (a: AudioKit.FormatConverter.BitDepthRule, b: AudioKit.FormatConverter.BitDepthRule) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Options {
+    public var format: AudioKit.AudioFileFormat?
+    public var sampleRate: Swift.Double?
+    public var bitDepth: Swift.UInt32?
+    public var bitRate: Swift.UInt32 {
+      get
+      set
+    }
+    public var bitDepthRule: AudioKit.FormatConverter.BitDepthRule
+    public var channels: Swift.UInt32?
+    public var isInterleaved: Swift.Bool?
+    public var eraseFile: Swift.Bool
+    public init()
+    public init?(url: Foundation.URL)
+    public init?(audioFile: AVFAudio.AVAudioFile)
+    public init?(pcmFormat: AudioKit.AudioFileFormat, sampleRate: Swift.Double? = nil, bitDepth: Swift.UInt32? = nil, channels: Swift.UInt32? = nil)
+  }
+}
+extension AudioKit.AppleSampler {
+  public func loadSoundFont(_ file: Swift.String, preset: Swift.Int, bank: Swift.Int, in bundle: Foundation.Bundle = .main) throws
+  public func loadMelodicSoundFont(url: Foundation.URL, preset: Swift.Int, in bundle: Foundation.Bundle = .main) throws
+  public func loadPercussiveSoundFont(_ file: Swift.String, preset: Swift.Int = 0, in bundle: Foundation.Bundle = .main) throws
+}
+@objc open class NodeRecorder : ObjectiveC.NSObject {
+  public var node: any AudioKit.Node {
+    get
+  }
+  public var isRecording: Swift.Bool {
+    get
+  }
+  public var isPaused: Swift.Bool {
+    get
+  }
+  open var durationToRecord: Swift.Double
+  open var recordedDuration: Swift.Double {
+    get
+  }
+  open var recordFormat: AVFAudio.AVAudioFormat?
+  open var audioFile: AVFAudio.AVAudioFile? {
+    get
+  }
+  public static var recordedFiles: [Foundation.URL]
+  public typealias AudioDataCallback = ([Swift.Float], AVFAudio.AVAudioTime) -> Swift.Void
+  public var audioDataCallback: AudioKit.NodeRecorder.AudioDataCallback?
+  public init(node: any AudioKit.Node, fileDirectoryURL: Foundation.URL? = nil, bus: Swift.Int = 0, shouldCleanupRecordings: Swift.Bool = true, audioDataCallback: AudioKit.NodeRecorder.AudioDataCallback? = nil) throws
+  @objc deinit
+  public func openFile(file: inout AVFAudio.AVAudioFile?)
+  public func closeFile(file: inout AVFAudio.AVAudioFile?)
+  public static func createAudioFile(fileDirectoryURL: Foundation.URL = URL(fileURLWithPath: NSTemporaryDirectory())) -> AVFAudio.AVAudioFile?
+  public static func removeRecordedFiles()
+  public func record() throws
+  public func stop()
+  public func pause()
+  public func resume()
+  public func reset() throws
+  public func createNewFile()
+}
+public protocol MIDIListener {
+  func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID?, timeStamp: CoreMIDI.MIDITimeStamp?)
+  func receivedMIDISetupChange()
+  func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+}
+extension AudioKit.MIDIListener {
+  public func isEqualTo(_ listener: any AudioKit.MIDIListener) -> Swift.Bool
+}
+extension os.OSLog {
+  public static let general: os.OSLog
+  public static let settings: os.OSLog
+  public static let midi: os.OSLog
+  public static let fileHandling: os.OSLog
+}
+@inline(__always) public func Log(_ items: Any?..., log: os.OSLog = .general, type: os.OSLogType = .info, file: Swift.String = #file, function: Swift.String = #function, line: Swift.Int = #line)
+extension AudioKit.MIDI {
+  public var virtualInputUIDs: [CoreMIDI.MIDIUniqueID] {
+    get
+  }
+  public var virtualInputNames: [Swift.String] {
+    get
+  }
+  public var virtualOutputUIDs: [CoreMIDI.MIDIUniqueID] {
+    get
+  }
+  public var virtualOutputNames: [Swift.String] {
+    get
+  }
+  public func createVirtualPorts(count: Swift.Int = 1, inputPortIDs: [Swift.Int32]? = nil, outputPortIDs: [Swift.Int32]? = nil, inputPortNames: [Swift.String]? = nil, outputPortNames: [Swift.String]? = nil)
+  public func createVirtualInputPorts(count: Swift.Int = 1, uniqueIDs: [Swift.Int32]? = nil, names: [Swift.String]? = nil)
+  public func createVirtualOutputPorts(count: Swift.Int = 1, uniqueIDs: [Swift.Int32]? = nil, names: [Swift.String]? = nil)
+  public func destroyAllVirtualPorts()
+  @discardableResult
+  public func destroyAllVirtualInputPorts() -> Swift.Bool
+  @discardableResult
+  public func destroyAllVirtualOutputPorts() -> Swift.Bool
+}
+extension AudioKit.FormatConverter {
+  public class func isPCM(url: Foundation.URL, ignorePathExtension _: Swift.Bool = false) -> Swift.Bool?
+  public class func isCompressed(url: Foundation.URL, ignorePathExtension: Swift.Bool = false) -> Swift.Bool?
+}
+extension Swift.Comparable {
+  @inlinable internal func clamped(to limits: Swift.ClosedRange<Self>) -> Self {
+        min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+public class Decimator : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let decimationDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($decimation) public var decimation: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $decimation: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let roundingDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($rounding) public var rounding: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $rounding: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let finalMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($finalMix) public var finalMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $finalMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, decimation: AudioKit.AUValue = decimationDef.defaultValue, rounding: AudioKit.AUValue = roundingDef.defaultValue, finalMix: AudioKit.AUValue = finalMixDef.defaultValue)
+  @objc deinit
+}
+extension AVFAudio.AVAudioFile {
+  public var duration: Foundation.TimeInterval {
+    get
+  }
+  public var peak: AVFAudio.AVAudioPCMBuffer.Peak? {
+    get
+  }
+  convenience public init(url: Foundation.URL, fromBuffer buffer: AVFAudio.AVAudioPCMBuffer) throws
+  public func toAVAudioPCMBuffer() -> AVFAudio.AVAudioPCMBuffer?
+  public func toFloatChannelData() -> AudioKit.FloatChannelData?
+  @discardableResult
+  public func extract(to outputURL: Foundation.URL, from startTime: Foundation.TimeInterval, to endTime: Foundation.TimeInterval, fadeInTime: Foundation.TimeInterval = 0, fadeOutTime: Foundation.TimeInterval = 0) -> AVFAudio.AVAudioFile?
+  public func extract(to url: Foundation.URL, from startTime: Foundation.TimeInterval, to endTime: Foundation.TimeInterval, fadeInTime: Foundation.TimeInterval = 0, fadeOutTime: Foundation.TimeInterval = 0, options: AudioKit.FormatConverter.Options? = nil, completionHandler: AudioKit.FormatConverter.FormatConverterCallback? = nil)
+}
+extension AVFoundation.AVURLAsset {
+  public var audioFormat: AVFAudio.AVAudioFormat? {
+    get
+  }
+}
+extension AVFAudio.AVAudioPCMBuffer {
+  convenience public init?(url: Foundation.URL) throws
+  convenience public init?(file: AVFAudio.AVAudioFile) throws
+}
+extension AVFAudio.AVAudioPCMBuffer {
+  public func toFloatChannelData() -> AudioKit.FloatChannelData?
+}
+extension AVFAudio.AVAudioPCMBuffer {
+  public struct Peak {
+    public init()
+    public var time: Swift.Double
+    public var framePosition: Swift.Int
+    public var amplitude: Swift.Float
+  }
+  public func peak() -> AVFAudio.AVAudioPCMBuffer.Peak?
+  public func normalize() -> AVFAudio.AVAudioPCMBuffer?
+  public func reverse() -> AVFAudio.AVAudioPCMBuffer?
+  public func fade(inTime: Swift.Double, outTime: Swift.Double, linearRamp: Swift.Bool = false) -> AVFAudio.AVAudioPCMBuffer?
+}
+@objc public class MIDIOMNIListener : ObjectiveC.NSObject {
+  public init(omni: Swift.Bool = true)
+  @objc deinit
+}
+extension AudioKit.MIDIOMNIListener : AudioKit.MIDIListener {
+  public func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISetupChange()
+  public func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  public func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+  public func omniStateChange()
+}
+public class BandPassFilter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let centerFrequencyDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($centerFrequency) public var centerFrequency: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $centerFrequency: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let bandwidthDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($bandwidth) public var bandwidth: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $bandwidth: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, centerFrequency: AudioKit.AUValue = centerFrequencyDef.defaultValue, bandwidth: AudioKit.AUValue = bandwidthDef.defaultValue)
+  @objc deinit
+}
+public class ParametricEQ : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let centerFreqDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($centerFreq) public var centerFreq: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $centerFreq: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let qDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($q) public var q: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $q: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let gainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($gain) public var gain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $gain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, centerFreq: AudioKit.AUValue = centerFreqDef.defaultValue, q: AudioKit.AUValue = qDef.defaultValue, gain: AudioKit.AUValue = gainDef.defaultValue)
+  @objc deinit
+}
+public protocol MIDIFileChunk {
+  var rawData: [AudioKit.MIDIByte] { get }
+  var typeData: [AudioKit.MIDIByte] { get }
+  var lengthData: [AudioKit.MIDIByte] { get }
+  var data: [AudioKit.MIDIByte] { get }
+  init?(data: [AudioKit.MIDIByte])
+}
+extension AudioKit.MIDIFileChunk {
+  public var isValid: Swift.Bool {
+    get
+  }
+  public var isNotValid: Swift.Bool {
+    get
+  }
+  public var isTypeValid: Swift.Bool {
+    get
+  }
+  public var isLengthValid: Swift.Bool {
+    get
+  }
+  public var length: Swift.Int {
+    get
+  }
+  public var typeData: [AudioKit.MIDIByte] {
+    get
+  }
+  public var lengthData: [AudioKit.MIDIByte] {
+    get
+  }
+  public var data: [AudioKit.MIDIByte] {
+    get
+  }
+  public var type: AudioKit.MIDIFileChunkType? {
+    get
+  }
+  public var isHeader: Swift.Bool {
+    get
+  }
+  public var isTrack: Swift.Bool {
+    get
+  }
+}
+public enum MIDIFileChunkType : Swift.String {
+  case track
+  case header
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension AVFAudio.AVAudioEngine {
+  @available(iOS 11.0, macOS 10.13, tvOS 11.0, *)
+  public func render(to audioFile: AVFAudio.AVAudioFile, maximumFrameCount: AVFAudio.AVAudioFrameCount = 4096, duration: Swift.Double, renderUntilSilent: Swift.Bool = false, silenceThreshold: Swift.Float = 0.00005, prerender: (() -> Swift.Void)? = nil, progress progressHandler: ((Swift.Double) -> Swift.Void)? = nil) throws
+}
+open class MIDIInstrument : AudioKit.Node, AudioKit.MIDIListener, AudioKit.NamedNode {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  open var midiIn: CoreMIDI.MIDIEndpointRef
+  open var name: Swift.String
+  open var mpeActiveNotes: [(note: AudioKit.MIDINoteNumber, channel: AudioKit.MIDIChannel)]
+  public init(midiInputName: Swift.String? = nil)
+  open func enableMIDI(_ midiClient: CoreMIDI.MIDIClientRef = MIDI.sharedInstance.client, name: Swift.String? = nil)
+  open func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDISetupChange()
+  open func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  open func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+  open func start(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func stop(noteNumber: AudioKit.MIDINoteNumber, channel: AudioKit.MIDIChannel, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  open func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  @objc deinit
+}
+extension AVFAudio.AVAudioTime {
+  public func extrapolateTimeShimmed(fromAnchor anchorTime: AVFAudio.AVAudioTime) -> AVFAudio.AVAudioTime
+  public static func now() -> AVFAudio.AVAudioTime
+  public func offset(seconds: Swift.Double) -> AVFAudio.AVAudioTime
+  public func timeIntervalSince(otherTime: AVFAudio.AVAudioTime) -> Swift.Double?
+  public func toSeconds(hostTime time: Swift.UInt64) -> Swift.Double
+  public class func secondsToAudioTime(hostTime: Swift.UInt64, time: Swift.Double) -> AVFAudio.AVAudioTime
+}
+public func + (left: AVFAudio.AVAudioTime, right: Swift.Double) -> AVFAudio.AVAudioTime
+public func + (left: AVFAudio.AVAudioTime, right: Swift.Int) -> AVFAudio.AVAudioTime
+public func - (left: AVFAudio.AVAudioTime, right: Swift.Double) -> AVFAudio.AVAudioTime
+public func - (left: AVFAudio.AVAudioTime, right: Swift.Int) -> AVFAudio.AVAudioTime
+extension CoreMIDI.MIDIPacketList : Swift.Sequence {
+  public typealias Element = CoreMIDI.MIDIPacket
+  public var count: Swift.UInt32 {
+    get
+  }
+  public func makeIterator() -> Swift.AnyIterator<CoreMIDI.MIDIPacketList.Element>
+  public typealias Iterator = Swift.AnyIterator<CoreMIDI.MIDIPacketList.Element>
+}
+public func extractPacketData(_ ptr: Swift.UnsafePointer<CoreMIDI.MIDIPacket>) -> [Swift.UInt8]
+public func extractPacket(_ ptr: Swift.UnsafePointer<CoreMIDI.MIDIPacket>) -> CoreMIDI.MIDIPacket?
+extension CoreMIDI.MIDIPacket : Swift.Sequence {
+  public func makeIterator() -> Swift.AnyIterator<AudioKit.MIDIEvent>
+  public typealias Element = AudioKit.MIDIEvent
+  public typealias Iterator = Swift.AnyIterator<AudioKit.MIDIEvent>
+}
+public typealias BPM = Swift.Double
+public struct Duration : Swift.CustomStringConvertible, Swift.Comparable {
+  public var beats: Swift.Double
+  public var sampleRate: Swift.Double
+  public var tempo: Swift.Double
+  public var samples: Swift.Int {
+    get
+    set
+  }
+  public var seconds: Swift.Double {
+    get
+  }
+  public var minutes: Swift.Double {
+    get
+  }
+  public var musicTimeStamp: AudioToolbox.MusicTimeStamp {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public init(samples: Swift.Int, sampleRate: Swift.Double = Settings.sampleRate, tempo: AudioKit.BPM = 60)
+  public init(beats: Swift.Double, tempo: AudioKit.BPM = 60)
+  public init(seconds: Swift.Double, sampleRate: Swift.Double = Settings.sampleRate, tempo: AudioKit.BPM = 60)
+  public static func += (lhs: inout AudioKit.Duration, rhs: AudioKit.Duration)
+  public static func -= (lhs: inout AudioKit.Duration, rhs: AudioKit.Duration)
+  public static func == (lhs: AudioKit.Duration, rhs: AudioKit.Duration) -> Swift.Bool
+  public static func < (lhs: AudioKit.Duration, rhs: AudioKit.Duration) -> Swift.Bool
+  public static func + (lhs: AudioKit.Duration, rhs: AudioKit.Duration) -> AudioKit.Duration
+  public static func - (lhs: AudioKit.Duration, rhs: AudioKit.Duration) -> AudioKit.Duration
+  public static func % (lhs: AudioKit.Duration, rhs: AudioKit.Duration) -> AudioKit.Duration
+}
+public func ceil(_ duration: AudioKit.Duration) -> AudioKit.Duration
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class BluetoothMIDIButton : UIKit.UIButton {
+  @_Concurrency.MainActor(unsafe) public func centerPopupIn(view: UIKit.UIView)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, *)
+public class PlaygroundNoiseGenerator : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var amplitude: AudioKit.AUValue
+  public init(amplitude: AudioKit.AUValue = 1)
+  @objc deinit
+}
+public class Compressor : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let thresholdDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($threshold) public var threshold: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $threshold: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let headRoomDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($headRoom) public var headRoom: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $headRoom: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let attackTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($attackTime) public var attackTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $attackTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let releaseTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($releaseTime) public var releaseTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $releaseTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let masterGainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($masterGain) public var masterGain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $masterGain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public var compressionAmount: AudioKit.AUValue {
+    get
+  }
+  public var inputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public var outputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public init(_ input: any AudioKit.Node, threshold: AudioKit.AUValue = thresholdDef.defaultValue, headRoom: AudioKit.AUValue = headRoomDef.defaultValue, attackTime: AudioKit.AUValue = attackTimeDef.defaultValue, releaseTime: AudioKit.AUValue = releaseTimeDef.defaultValue, masterGain: AudioKit.AUValue = masterGainDef.defaultValue)
+  @objc deinit
+}
+public struct MIDIFileTrackChunk : AudioKit.MIDIFileChunk {
+  public let rawData: [AudioKit.MIDIByte]
+  public init?(data: [AudioKit.MIDIByte])
+  public var chunkEvents: [AudioKit.MIDIFileChunkEvent] {
+    get
+  }
+}
+public class RingModulator : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let ringModFreq1Def: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModFreq1) public var ringModFreq1: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModFreq1: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModFreq2Def: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModFreq2) public var ringModFreq2: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModFreq2: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let ringModBalanceDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($ringModBalance) public var ringModBalance: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $ringModBalance: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let finalMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($finalMix) public var finalMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $finalMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, ringModFreq1: AudioKit.AUValue = ringModFreq1Def.defaultValue, ringModFreq2: AudioKit.AUValue = ringModFreq2Def.defaultValue, ringModBalance: AudioKit.AUValue = ringModBalanceDef.defaultValue, finalMix: AudioKit.AUValue = finalMixDef.defaultValue)
+  @objc deinit
+}
+public protocol MIDITransformer {
+  func transform(eventList: [AudioKit.MIDIEvent]) -> [AudioKit.MIDIEvent]
+}
+extension AudioKit.MIDITransformer {
+  public func transform(eventList: [AudioKit.MIDIEvent]) -> [AudioKit.MIDIEvent]
+  public func isEqualTo(_ transformer: any AudioKit.MIDITransformer) -> Swift.Bool
+}
+public protocol NamedNode : AudioKit.Node {
+  var name: Swift.String { get set }
+}
+public protocol Tap {
+  #if compiler(>=5.3) && $AsyncAwait
+  func handleTap(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime) async
+  #endif
+}
+extension AudioKit.Node {
+  public func install(tap: any AudioKit.Tap, bufferSize: Swift.UInt32)
+}
+extension AudioKit.Table {
+  public class func harmonicPitchRange(rootFrequency: Swift.Double = 8.175_798_915_643_75, octaveStepSize: Swift.Double = 1) -> [(Swift.Double, Swift.Int)]
+  public class func harmonicFrequencyRange(f0: Swift.Double = 130.812_782_650_3, f1: Swift.Double = 2093.004_522_404_8, wavetableCount: Swift.Int = 12) -> [(Swift.Double, Swift.Int)]
+  public func sawtooth(harmonicCount: Swift.Int = 1024, clear: Swift.Bool = true)
+  public func square(harmonicCount: Swift.Int = 1024, clear: Swift.Bool = true)
+  public func triangle(harmonicCount: Swift.Int = 1024, clear: Swift.Bool = true)
+  public func pwm(harmonicCount: Swift.Int = 1024, period: Swift.Float = 1 / 8)
+  public func minMax() -> (min: Swift.Float, max: Swift.Float, absMax: Swift.Float)
+  public func normalize()
+  public func reverse()
+  public func invert()
+  public func msd(t: AudioKit.Table) -> AudioKit.Table.Element
+  @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+  public class func createInterpolatedTables(inputTables: [AudioKit.Table], desiredTableCount: Swift.Int = 256) -> [AudioKit.Table]
+  public class func downSampleTables(inputTables: [AudioKit.Table], to sampleCount: Swift.Int = 64) -> [AudioKit.Table]
+  public class func chopAudioToTables(signal: [Swift.Float], tableLength: Swift.Int = 2048) -> [AudioKit.Table]
+  @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+  public class func createWavetableArray(_ url: Foundation.URL, tableLength: Swift.Int = 2048) -> [AudioKit.Table]
+}
+public class NewPitch : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public init(_ input: any AudioKit.Node)
+  public var pitch: AudioKit.AUValue {
+    get
+    set
+  }
+  @objc deinit
+}
+public let connectionTreeLinePrefix: Swift.String
+extension AudioKit.Node {
+  public var connectionTreeDescription: Swift.String {
+    get
+  }
+}
+public protocol MIDITempoObserver {
+  func midiClockLeaderMode()
+  func midiClockLeaderEnabled()
+  func receivedTempo(bpm: AudioKit.BPMType, label: Swift.String)
+}
+extension AudioKit.MIDITempoObserver {
+  public func midiClockLeaderMode()
+  public func midiClockLeaderEnabled()
+  public func receivedTempo(bpm: AudioKit.BPMType, label: Swift.String)
+  public func isEqualTo(_ listener: any AudioKit.MIDITempoObserver) -> Swift.Bool
+}
+public protocol MIDISystemRealTimeObserver {
+  func startSRT(listener: AudioKit.MIDISystemRealTimeListener)
+  func stopSRT(listener: AudioKit.MIDISystemRealTimeListener)
+  func continueSRT(listener: AudioKit.MIDISystemRealTimeListener)
+}
+extension AudioKit.MIDISystemRealTimeObserver {
+  public func isEqualTo(_ listener: any AudioKit.MIDISystemRealTimeObserver) -> Swift.Bool
+}
+public struct MIDINoteData : Swift.CustomStringConvertible, Swift.Equatable {
+  public var noteNumber: AudioKit.MIDINoteNumber
+  public var velocity: AudioKit.MIDIVelocity
+  public var channel: AudioKit.MIDIChannel
+  public var duration: AudioKit.Duration
+  public var position: AudioKit.Duration
+  public init(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, duration: AudioKit.Duration, position: AudioKit.Duration)
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: AudioKit.MIDINoteData, b: AudioKit.MIDINoteData) -> Swift.Bool
+}
+public class AmplitudeTap : AudioKit.BaseTap {
+  public var amplitude: Swift.Float {
+    get
+  }
+  public var leftAmplitude: Swift.Float {
+    get
+  }
+  public var rightAmplitude: Swift.Float {
+    get
+  }
+  public var stereoMode: AudioKit.StereoMode
+  public var analysisMode: AudioKit.AnalysisMode
+  public init(_ input: any AudioKit.Node, bufferSize: Swift.UInt32 = 1_024, stereoMode: AudioKit.StereoMode = .center, analysisMode: AudioKit.AnalysisMode = .rms, callbackQueue: Dispatch.DispatchQueue = .main, handler: @escaping (Swift.Float) -> Swift.Void = { _ in })
+  override public func doHandleTapBlock(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime)
+  override public func stop()
+  @objc deinit
+}
+public enum AnalysisMode {
+  case rms
+  case peak
+  public static func == (a: AudioKit.AnalysisMode, b: AudioKit.AnalysisMode) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum StereoMode {
+  case left
+  case right
+  case center
+  public static func == (a: AudioKit.StereoMode, b: AudioKit.StereoMode) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+open class AppleSampler : AudioKit.Node {
+  public var internalAU: AudioToolbox.AUAudioUnit? {
+    get
+  }
+  public var audioFiles: [AVFAudio.AVAudioFile] {
+    get
+    set
+  }
+  public var samplerUnit: AVFAudio.AVAudioUnitSampler
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var amplitude: AudioKit.AUValue {
+    get
+    set
+  }
+  public var volume: AudioKit.AUValue {
+    get
+    set
+  }
+  public var pan: AudioKit.AUValue {
+    get
+    set
+  }
+  public var tuning: AudioKit.AUValue {
+    get
+    set
+  }
+  public init()
+  public func loadInstrument(at url: Foundation.URL) throws
+  public func loadAudioFile(_ file: AVFAudio.AVAudioFile) throws
+  public func loadAudioFiles(_ files: [AVFAudio.AVAudioFile]) throws
+  public func loadInstrument(url: Foundation.URL) throws
+  open func play(noteNumber: AudioKit.MIDINoteNumber = 60, velocity: AudioKit.MIDIVelocity = 127, channel: AudioKit.MIDIChannel = 0)
+  open func stop(noteNumber: AudioKit.MIDINoteNumber = 60, channel: AudioKit.MIDIChannel = 0)
+  public func setPitchbend(amount: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel)
+  public func resetSampler()
+  @objc deinit
+}
+extension AudioKit.AppleSampler {
+  @available(*, deprecated, message: "Start using URLs since files can come from various places.")
+  public func loadAUPreset(_ file: Swift.String) throws
+  @available(*, deprecated, message: "Start using URLs since files can come from various places.")
+  public func loadEXS24(_ file: Swift.String) throws
+  @available(*, deprecated, message: "Start using URLs since files can come from various places.")
+  public func loadMelodicSoundFont(_ file: Swift.String, preset: Swift.Int, in bundle: Foundation.Bundle = .main) throws
+  @available(*, deprecated, message: "Start using URLs since files can come from various places.")
+  public func loadPath(_ filePath: Swift.String) throws
+  @available(*, deprecated, message: "Start using URLs since files can come from various places.")
+  public func loadWav(_ file: Swift.String, in bundle: Foundation.Bundle = .main) throws
+}
+extension AudioKit.AudioPlayer {
+  public func schedule(at when: AVFAudio.AVAudioTime? = nil, completionCallbackType: AVFAudio.AVAudioPlayerNodeCompletionCallbackType = .dataPlayedBack)
+}
+public class MIDINoteDuration {
+  public var noteStartTime: Swift.Double
+  public var noteEndTime: Swift.Double
+  public var noteDuration: Swift.Double
+  public var noteNumber: Swift.Int
+  public var noteNumberMap: Swift.Int
+  public var noteRange: Swift.Int
+  public init(noteOnPosition: Swift.Double, noteOffPosition: Swift.Double, noteNumber: Swift.Int)
+  @objc deinit
+}
+public class MIDIFileTrackNoteMap {
+  final public let midiTrack: AudioKit.MIDIFileTrack!
+  final public let midiFile: AudioKit.MIDIFile!
+  final public let trackNumber: Swift.Int!
+  public var loNote: Swift.Int
+  public var hiNote: Swift.Int
+  public var noteRange: Swift.Int
+  public var endOfTrack: Swift.Double
+  public var noteList: [AudioKit.MIDINoteDuration]
+  public init(midiFile: AudioKit.MIDIFile, trackNumber: Swift.Int)
+  @objc deinit
+}
+public func CheckError(_ error: Darwin.OSStatus)
+extension Swift.UInt8 {
+  public var lowBit: AudioKit.MIDIByte {
+    get
+  }
+  public var highBit: AudioKit.MIDIByte {
+    get
+  }
+  public var hex: Swift.String {
+    get
+  }
+}
+public enum MIDITimeFormat : Swift.Int {
+  case ticksPerBeat
+  case framesPerSecond
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+open class MIDISampler : AudioKit.AppleSampler, AudioKit.NamedNode {
+  open var midiIn: CoreMIDI.MIDIEndpointRef
+  open var name: Swift.String
+  public init(name midiOutputName: Swift.String? = nil)
+  public func enableMIDI(_ midiClient: CoreMIDI.MIDIClientRef = MIDI.sharedInstance.client, name: Swift.String? = nil)
+  public func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel) throws
+  public func midiCC(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel)
+  override open func play(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel)
+  override open func stop(noteNumber: AudioKit.MIDINoteNumber, channel: AudioKit.MIDIChannel)
+  public func destroyEndpoint()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class Settings : ObjectiveC.NSObject {
+  public enum BufferLength : Swift.Int, Swift.CaseIterable {
+    case shortest
+    case veryShort
+    case short
+    case medium
+    case long
+    case veryLong
+    case huge
+    case longest
+    public init?(bufferSizeInSamples: Swift.UInt)
+    public var samplesCount: AVFAudio.AVAudioFrameCount {
+      get
+    }
+    public var duration: Swift.Double {
+      get
+    }
+    public init?(rawValue: Swift.Int)
+    public typealias AllCases = [AudioKit.Settings.BufferLength]
+    public typealias RawValue = Swift.Int
+    public static var allCases: [AudioKit.Settings.BufferLength] {
+      get
+    }
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  public static let defaultAudioFormat: AVFAudio.AVAudioFormat
+  public static var sampleRate: Swift.Double {
+    get
+    set
+  }
+  public static var channelCount: Swift.UInt32 {
+    get
+    set
+  }
+  public static var bufferLength: AudioKit.Settings.BufferLength
+  public static var recordingBufferLength: AudioKit.Settings.BufferLength
+  public static var fixTruncatedRecordings: Swift.Bool
+  public static var enableLogging: Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+public class LowPassFilter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let cutoffFrequencyDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($cutoffFrequency) public var cutoffFrequency: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $cutoffFrequency: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let resonanceDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($resonance) public var resonance: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $resonance: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, cutoffFrequency: AudioKit.AUValue = cutoffFrequencyDef.defaultValue, resonance: AudioKit.AUValue = resonanceDef.defaultValue)
+  @objc deinit
+}
+extension Swift.OpaquePointer {
+  public func getValue<T>(forProperty property: AudioToolbox.AudioUnitPropertyID) throws -> T
+  public func setValue<T>(value: T, forProperty property: AudioToolbox.AudioUnitPropertyID) throws
+  public func add(listener: AudioKit.AudioUnitPropertyListener, toProperty property: AudioToolbox.AudioUnitPropertyID) throws
+  public func remove(listener: AudioKit.AudioUnitPropertyListener, fromProperty property: AudioToolbox.AudioUnitPropertyID)
+}
+public struct AudioUnitPropertyListener {
+  public typealias AudioUnitPropertyListenerCallback = (_ audioUnit: AudioToolbox.AudioUnit, _ property: AudioToolbox.AudioUnitPropertyID) -> Swift.Void
+  public init(callback: @escaping AudioKit.AudioUnitPropertyListener.AudioUnitPropertyListenerCallback)
+}
+extension Swift.OpaquePointer {
+  public func getPropertyInfo(propertyID: AudioToolbox.AudioUnitPropertyID) throws -> (dataSize: Swift.UInt32, writable: Swift.Bool)
+  public func getProperty<T>(propertyID: AudioToolbox.AudioUnitPropertyID, dataSize: Swift.UInt32) throws -> T
+  public func setProperty<T>(propertyID: AudioToolbox.AudioUnitPropertyID, dataSize: Swift.UInt32, data: T) throws
+}
+extension Swift.Int32 {
+  public func check() throws
+}
+extension AudioKit.AudioPlayer {
+  @available(*, deprecated, renamed: "schedule(at:)")
+  public func scheduleBuffer(_ buffer: AVFAudio.AVAudioPCMBuffer, at when: AVFAudio.AVAudioTime?, options: AVFAudio.AVAudioPlayerNodeBufferOptions = [])
+  @available(*, deprecated, renamed: "schedule(at:)")
+  public func scheduleBuffer(url: Foundation.URL, at when: AVFAudio.AVAudioTime?, options: AVFAudio.AVAudioPlayerNodeBufferOptions = [])
+  @available(*, deprecated, renamed: "schedule(at:)")
+  public func scheduleFile(_ file: AVFAudio.AVAudioFile, at when: AVFAudio.AVAudioTime?)
+  @available(*, deprecated, message: "use 'currentTime' instead.")
+  public func getCurrentTime() -> Foundation.TimeInterval
+}
+public class Mixer : AudioKit.Node, AudioKit.NamedNode {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  public var outputFormat: AVFAudio.AVAudioFormat
+  open var name: Swift.String
+  public var volume: AudioKit.AUValue {
+    get
+    set
+  }
+  public var pan: AudioKit.AUValue {
+    get
+    set
+  }
+  public var isStarted: Swift.Bool {
+    get
+  }
+  public init(volume: AudioKit.AUValue = 1.0, name: Swift.String? = nil)
+  convenience public init(_ inputs: any AudioKit.Node..., name: Swift.String? = nil)
+  convenience public init(_ inputs: [any AudioKit.Node], name: Swift.String? = nil)
+  public func addInput(_ node: any AudioKit.Node, strategy: AudioKit.ConnectStrategy = .complete)
+  public func hasInput(_ node: any AudioKit.Node) -> Swift.Bool
+  public func removeInput(_ node: any AudioKit.Node, strategy: AudioKit.DisconnectStrategy = .recursive)
+  public func removeAllInputs()
+  public func resizeInputBussesArray(requiredSize: Swift.Int) -> Swift.Int
+  @objc deinit
+}
+public class Delay : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let dryWetMixDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($dryWetMix) public var dryWetMix: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $dryWetMix: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let timeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($time) public var time: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $time: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let feedbackDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($feedback) public var feedback: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $feedback: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let lowPassCutoffDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($lowPassCutoff) public var lowPassCutoff: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $lowPassCutoff: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, time: AudioKit.AUValue = timeDef.defaultValue, feedback: AudioKit.AUValue = feedbackDef.defaultValue, lowPassCutoff: AudioKit.AUValue = lowPassCutoffDef.defaultValue, dryWetMix: AudioKit.AUValue = dryWetMixDef.defaultValue)
+  @objc deinit
+}
+@objc open class MIDITimeout : ObjectiveC.NSObject {
+  public typealias ActionClosureType = () -> Swift.Void
+  public init(timeoutInterval time: Foundation.TimeInterval, onMainThread: Swift.Bool = true, success: @escaping AudioKit.MIDITimeout.ActionClosureType, timeout: @escaping AudioKit.MIDITimeout.ActionClosureType)
+  @objc deinit
+  public func perform(_ block: () -> Swift.Void)
+  public func succeed()
+}
+extension AudioKit.Settings {
+  public static var audioFormat: AVFAudio.AVAudioFormat {
+    get
+    set
+  }
+  public static var allowHapticsAndSystemSoundsDuringRecording: Swift.Bool {
+    get
+    set
+  }
+  public static var disableAVAudioSessionCategoryManagement: Swift.Bool
+  public static var ioBufferDuration: Swift.Double {
+    get
+    set
+  }
+  public static let appSupportsBackgroundAudio: Swift.Bool
+  public static let session: AVFAudio.AVAudioSession
+  public static func setSession(category: AudioKit.Settings.SessionCategory, options: Swift.UInt) throws
+  public static func setSession(category: AudioKit.Settings.SessionCategory, with options: AVFAudio.AVAudioSession.CategoryOptions = []) throws
+  public static var headPhonesPlugged: Swift.Bool {
+    get
+  }
+  public enum SessionCategory : Swift.Int, Swift.CustomStringConvertible {
+    case ambient
+    case soloAmbient
+    case playback
+    case record
+    case playAndRecord
+    case audioProcessing
+    case multiRoute
+    public var description: Swift.String {
+      get
+    }
+    public var avCategory: AVFAudio.AVAudioSession.Category {
+      get
+    }
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+}
+extension AudioKit.MultiChannelInputNodeTap {
+  public class WriteableFile : Swift.CustomStringConvertible {
+    public var description: Swift.String {
+      get
+    }
+    public var url: Foundation.URL {
+      get
+    }
+    public var fileFormat: AVFAudio.AVAudioFormat {
+      get
+    }
+    public var channel: Swift.Int32 {
+      get
+    }
+    public var file: AVFAudio.AVAudioFile? {
+      get
+    }
+    public var amplitude: Swift.Float {
+      get
+    }
+    public var duration: Swift.Double {
+      get
+    }
+    public var amplitudeArray: [Swift.Float] {
+      get
+    }
+    public var timestamp: AVFAudio.AVAudioTime? {
+      get
+    }
+    public init(url: Foundation.URL, fileFormat: AVFAudio.AVAudioFormat, channel: Swift.Int32, ioLatency: AVFAudio.AVAudioFrameCount = 0)
+    public var ioLatency: AVFAudio.AVAudioFrameCount {
+      get
+    }
+    public var totalFramesRead: AVFAudio.AVAudioFrameCount {
+      get
+    }
+    public var totalFramesWritten: AVFAudio.AVAudioFramePosition {
+      get
+    }
+    public func process(buffer: AVFAudio.AVAudioPCMBuffer, time: AVFAudio.AVAudioTime, write: Swift.Bool) throws
+    public func close()
+    @objc deinit
+  }
+}
+public class VariSpeed : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  public var rate: AudioKit.AUValue {
+    get
+    set
+  }
+  public var isStarted: Swift.Bool {
+    get
+  }
+  public init(_ input: any AudioKit.Node, rate: AudioKit.AUValue = 1.0)
+  public func start()
+  public func stop()
+  @objc deinit
+}
+public struct MIDIStatus : AudioKit.MIDIMessage {
+  public var data: [AudioKit.MIDIByte] {
+    get
+  }
+  public var byte: AudioKit.MIDIByte
+  public init(type: AudioKit.MIDIStatusType, channel: AudioKit.MIDIChannel)
+  public init(command: AudioKit.MIDISystemCommand)
+  public init?(byte: AudioKit.MIDIByte)
+  public var type: AudioKit.MIDIStatusType? {
+    get
+  }
+  public var channel: AudioKit.MIDIChannel {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public var length: Swift.Int {
+    get
+  }
+}
+public enum MIDIStatusType : Swift.Int {
+  case noteOff
+  case noteOn
+  case polyphonicAftertouch
+  case controllerChange
+  case programChange
+  case channelAftertouch
+  case pitchWheel
+  public static func from(byte: AudioKit.MIDIByte) -> AudioKit.MIDIStatusType?
+  public var length: Swift.Int {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum NodeStatus {
+  public enum Playback {
+    case stopped
+    case playing
+    case paused
+    case scheduling
+    public static func == (a: AudioKit.NodeStatus.Playback, b: AudioKit.NodeStatus.Playback) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+open class RawDataTap : AudioKit.BaseTap {
+  open var data: [Swift.Float]
+  public typealias Handler = ([Swift.Float]) -> Swift.Void
+  public init(_ input: any AudioKit.Node, bufferSize: Swift.UInt32 = 1_024, callbackQueue: Dispatch.DispatchQueue = .main, handler: @escaping AudioKit.RawDataTap.Handler = { _ in })
+  override open func doHandleTapBlock(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime)
+  override public func stop()
+  @objc deinit
+}
+#if compiler(>=5.3) && $Actors
+public actor RawDataTap2 : AudioKit.Tap {
+  public typealias Handler = ([Swift.Float]) -> Swift.Void
+  public init(_ input: any AudioKit.Node, handler: @escaping AudioKit.RawDataTap2.Handler = { _ in })
+  #if compiler(>=5.3) && $AsyncAwait
+  public func handleTap(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime) async
+  #endif
+  @objc deinit
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  @_semantics("defaultActor") nonisolated final public var unownedExecutor: _Concurrency.UnownedSerialExecutor {
+    get
+  }
+}
+#endif
+public protocol ObserverProtocol {
+  func isEqualTo(_ listener: any AudioKit.ObserverProtocol) -> Swift.Bool
+}
+@propertyWrapper final public class ThreadLockedAccessor<T> {
+  public init(wrappedValue value: T)
+  final public var wrappedValue: T {
+    get
+    _modify
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers public class MIDIClockListener : ObjectiveC.NSObject {
+  public var quarterNoteQuantumCounter: AudioKit.MIDIByte
+  public var quantumCounter: Swift.UInt64
+  public var sppMIDIBeatCounter: Swift.UInt64
+  public var sppMIDIBeatQuantumCounter: AudioKit.MIDIByte
+  public var fourCount: AudioKit.MIDIByte
+  @objc deinit
+}
+extension AudioKit.MIDIClockListener {
+  public func addObserver(_ observer: any AudioKit.MIDIBeatObserver)
+  public func removeObserver(_ observer: any AudioKit.MIDIBeatObserver)
+  public func removeAllObservers()
+}
+extension AudioKit.MIDIClockListener : AudioKit.MIDIBeatObserver {
+}
+extension AudioKit.MIDIClockListener : AudioKit.MIDITempoObserver {
+  public func midiClockFollowerMode()
+  public func midiClockLeaderEnabled()
+}
+extension AudioKit.MIDIClockListener : AudioKit.MIDISystemRealTimeObserver {
+  public func stopSRT(listener: AudioKit.MIDISystemRealTimeListener)
+  public func startSRT(listener: AudioKit.MIDISystemRealTimeListener)
+  public func continueSRT(listener: AudioKit.MIDISystemRealTimeListener)
+}
+public struct MIDIFileChunkEvent {
+}
+@objc @_inheritsConvenienceInitializers open class AppleSequencer : ObjectiveC.NSObject {
+  open var sequence: AudioToolbox.MusicSequence?
+  open var sequencePointer: Swift.UnsafeMutablePointer<AudioToolbox.MusicSequence>?
+  open var tracks: [AudioKit.MusicTrackManager]
+  open var loopEnabled: Swift.Bool {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+  convenience public init(filename: Swift.String)
+  convenience public init(fromURL fileURL: Foundation.URL)
+  convenience public init(fromData data: Foundation.Data)
+  public func preroll()
+  public func toggleLoop()
+  public func enableLooping()
+  public func enableLooping(_ loopLength: AudioKit.Duration)
+  public func disableLooping()
+  public func setLoopInfo(_ duration: AudioKit.Duration, loopCount: Swift.Int)
+  public func setLength(_ length: AudioKit.Duration)
+  open var length: AudioKit.Duration {
+    get
+  }
+  public func setRate(_ rate: Swift.Double)
+  open var rate: Swift.Double {
+    get
+  }
+  public func setTempo(_ bpm: Swift.Double)
+  public func addTempoEventAt(tempo bpm: Swift.Double, position: AudioKit.Duration)
+  open var tempo: Swift.Double {
+    get
+  }
+  open var allTempoEvents: [(AudioToolbox.MusicTimeStamp, Swift.Double)] {
+    get
+  }
+  public func getTempo(at position: AudioToolbox.MusicTimeStamp) -> Swift.Double
+  open var allTimeSignatureEvents: [(AudioToolbox.MusicTimeStamp, AudioKit.TimeSignature)] {
+    get
+  }
+  public func getTimeSignature(at position: AudioToolbox.MusicTimeStamp) -> AudioKit.TimeSignature
+  public func addTimeSignatureEvent(at timeStamp: AudioToolbox.MusicTimeStamp = 0.0, timeSignature: AudioKit.TimeSignature, ticksPerMetronomeClick: AudioKit.MIDIByte = 24, thirtySecondNotesPerQuarter: AudioKit.MIDIByte = 8, clearExistingEvents: Swift.Bool = true)
+  public func duration(seconds: Swift.Double) -> AudioKit.Duration
+  public func seconds(duration: AudioKit.Duration) -> Swift.Double
+  public func play()
+  public func stop()
+  public func rewind()
+  open var isPlaying: Swift.Bool {
+    get
+  }
+  open var currentPosition: AudioKit.Duration {
+    get
+  }
+  open var currentRelativePosition: AudioKit.Duration {
+    get
+  }
+  open var trackCount: Swift.Int {
+    get
+  }
+  open var timeResolution: Swift.UInt32 {
+    get
+  }
+  public func loadMIDIFile(_ filename: Swift.String)
+  public func loadMIDIFile(fromURL fileURL: Foundation.URL)
+  public func loadMIDIFile(fromData data: Foundation.Data)
+  public func addMIDIFileTracks(_ filename: Swift.String, useExistingSequencerLength: Swift.Bool = true)
+  public func addMIDIFileTracks(_ url: Foundation.URL, useExistingSequencerLength: Swift.Bool = true)
+  public func newTrack(_ name: Swift.String = "Unnamed") -> AudioKit.MusicTrackManager?
+  public func deleteTrack(trackIndex: Swift.Int)
+  public func clearRange(start: AudioKit.Duration, duration: AudioKit.Duration)
+  public func setTime(_ time: AudioToolbox.MusicTimeStamp)
+  public func genData() -> Foundation.Data?
+  public func debug()
+  @available(tvOS 12.0, *)
+  public func setGlobalMIDIOutput(_ midiEndpoint: CoreMIDI.MIDIEndpointRef)
+  public func nearestQuantizedPosition(quantizationInBeats: Swift.Double) -> AudioKit.Duration
+  public func previousQuantizedPosition(quantizationInBeats: Swift.Double) -> AudioKit.Duration
+  public func nextQuantizedPosition(quantizationInBeats: Swift.Double) -> AudioKit.Duration
+  public enum MusicPlayerTimeConversionError : Swift.Error {
+    case musicPlayerIsNotPlaying
+    case osStatus(Darwin.OSStatus)
+  }
+  public func hostTime(forBeats inBeats: AVFAudio.AVMusicTimeStamp) throws -> Swift.UInt64
+  public func beats(forHostTime inHostTime: Swift.UInt64) throws -> AVFAudio.AVMusicTimeStamp
+}
+@objc public class MIDIMonoPolyListener : ObjectiveC.NSObject {
+  public init(mono: Swift.Bool = true)
+  @objc deinit
+}
+extension AudioKit.MIDIMonoPolyListener : AudioKit.MIDIListener {
+  public func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func monoPolyChanged()
+  public func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISetupChange()
+  public func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  public func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+}
+public typealias MIDICallback = (AudioKit.MIDIByte, AudioKit.MIDIByte, AudioKit.MIDIByte) -> Swift.Void
+open class MIDICallbackInstrument : AudioKit.MIDIInstrument {
+  open var callback: AudioKit.MIDICallback?
+  public init(midiInputName: Swift.String = "AudioKit Callback Instrument", callback: AudioKit.MIDICallback? = nil)
+  override open func start(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  override open func stop(noteNumber: AudioKit.MIDINoteNumber, channel: AudioKit.MIDIChannel, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  override open func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  override open func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  override open func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  override open func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  @objc deinit
+}
+public class Expander : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let expansionRatioDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($expansionRatio) public var expansionRatio: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $expansionRatio: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let expansionThresholdDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($expansionThreshold) public var expansionThreshold: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $expansionThreshold: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let attackTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($attackTime) public var attackTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $attackTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let releaseTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($releaseTime) public var releaseTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $releaseTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let masterGainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($masterGain) public var masterGain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $masterGain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public var compressionAmount: AudioKit.AUValue {
+    get
+  }
+  public var inputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public var outputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public init(_ input: any AudioKit.Node, expansionRatio: AudioKit.AUValue = expansionRatioDef.defaultValue, expansionThreshold: AudioKit.AUValue = expansionThresholdDef.defaultValue, attackTime: AudioKit.AUValue = attackTimeDef.defaultValue, releaseTime: AudioKit.AUValue = releaseTimeDef.defaultValue, masterGain: AudioKit.AUValue = masterGainDef.defaultValue)
+  @objc deinit
+}
+public enum MIDICustomMetaEventType : AudioKit.MIDIByte {
+  case sequenceNumber
+  case textEvent
+  case copyright
+  case trackName
+  case instrumentName
+  case lyric
+  case marker
+  case cuePoint
+  case programName
+  case devicePortName
+  case metaEvent10
+  case metaEvent12
+  case channelPrefix
+  case midiPort
+  case endOfTrack
+  case setTempo
+  case smtpeOffset
+  case timeSignature
+  case keySignature
+  case sequencerSpecificMetaEvent
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: AudioKit.MIDIByte)
+  public typealias RawValue = AudioKit.MIDIByte
+  public var rawValue: AudioKit.MIDIByte {
+    get
+  }
+}
+public struct MIDICustomMetaEvent : AudioKit.MIDIMessage {
+  public var positionInBeats: Swift.Double?
+  public init?(data: [AudioKit.MIDIByte])
+  public let data: [AudioKit.MIDIByte]
+  public let type: AudioKit.MIDICustomMetaEventType
+  public let length: Swift.Int
+  public var description: Swift.String {
+    get
+  }
+  public var name: Swift.String? {
+    get
+  }
+}
+public typealias DeviceID = Swift.String
+public struct Device : Swift.Equatable, Swift.Hashable {
+  public var name: Swift.String {
+    get
+  }
+  public var inputChannelCount: Swift.Int? {
+    get
+  }
+  public var outputChannelCount: Swift.Int? {
+    get
+  }
+  public var deviceID: AudioKit.DeviceID {
+    get
+  }
+  public init(name: Swift.String, deviceID: AudioKit.DeviceID, dataSource: Swift.String = "")
+  public init(portDescription: AVFAudio.AVAudioSessionPortDescription)
+  public static func == (a: AudioKit.Device, b: AudioKit.Device) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension AudioKit.Device : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AudioKit.AudioPlayer {
+  public func play(from startTime: Foundation.TimeInterval? = nil, to endTime: Foundation.TimeInterval? = nil, at when: AVFAudio.AVAudioTime? = nil, completionCallbackType: AVFAudio.AVAudioPlayerNodeCompletionCallbackType = .dataPlayedBack)
+  public func pause()
+  public func resume()
+  public func stop()
+  public func seek(time seekTime: Foundation.TimeInterval)
+  public var currentPosition: Swift.Double {
+    get
+  }
+  public var currentTime: Foundation.TimeInterval {
+    get
+  }
+  public var playerTime: Foundation.TimeInterval? {
+    get
+  }
+}
+extension AudioKit.AudioPlayer {
+  public var isStarted: Swift.Bool {
+    get
+  }
+  public func start()
+}
+public struct MIDIVariableLengthQuantity {
+  public let data: [AudioKit.MIDIByte]
+  public var length: Swift.Int {
+    get
+  }
+  public var quantity: Swift.UInt32 {
+    get
+  }
+  public init?(fromBytes data: Swift.ArraySlice<AudioKit.MIDIByte>)
+  public init?(fromBytes data: [AudioKit.MIDIByte])
+  public static func read(bytes: [AudioKit.MIDIByte]) -> (Swift.Int, Swift.UInt32)
+}
+extension AVFAudio.AVAudioMixerNode {
+  public func connectMixer(input: AVFAudio.AVAudioNode, format: AVFAudio.AVAudioFormat)
+}
+public class AudioEngine {
+  final public let avEngine: AVFAudio.AVAudioEngine
+  public var mainMixerNode: AudioKit.Mixer? {
+    get
+  }
+  public var outputAudioFormat: AVFAudio.AVAudioFormat?
+  @_inheritsConvenienceInitializers public class InputNode : AudioKit.Mixer {
+    override public init(volume: AudioKit.AUValue = super, name: Swift.String? = nil)
+    @objc deinit
+  }
+  public var input: AudioKit.AudioEngine.InputNode? {
+    get
+  }
+  public init()
+  public var output: (any AudioKit.Node)? {
+    get
+    set
+  }
+  public func rebuildGraph()
+  public func start() throws
+  public func stop()
+  public func pause()
+  public func startTest(totalDuration duration: Swift.Double) -> AVFAudio.AVAudioPCMBuffer
+  public func render(duration: Swift.Double) -> AVFAudio.AVAudioPCMBuffer
+  public func findAudioUnit(named: Swift.String) -> AVFAudio.AVAudioUnit?
+  public static var inputDevices: [AudioKit.Device] {
+    get
+  }
+  public static var outputDevices: [AudioKit.Device] {
+    get
+  }
+  public static func setInputDevice(_ input: AudioKit.Device) throws
+  public var inputDevice: AudioKit.Device? {
+    get
+  }
+  public var outputDevice: AudioKit.Device? {
+    get
+  }
+  @available(iOS 11, macOS 10.13, tvOS 11, *)
+  public func renderToFile(_ audioFile: AVFAudio.AVAudioFile, maximumFrameCount: AVFAudio.AVAudioFrameCount = 4096, duration: Swift.Double, prerender: (() -> Swift.Void)? = nil, progress: ((Swift.Double) -> Swift.Void)? = nil) throws
+  @objc deinit
+}
+public enum MusicalDuration : Swift.Int, Swift.CaseIterable {
+  case thirtysecond
+  case thirtysecondDotted
+  case sixteenth
+  case sixteenthDotted
+  case eighth
+  case eighthDotted
+  case quarter
+  case quarterDotted
+  case half
+  case halfDotted
+  case whole
+  case wholeDotted
+  public var multiplier: Swift.Double {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public var next: AudioKit.MusicalDuration {
+    get
+  }
+  public var previous: AudioKit.MusicalDuration {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias AllCases = [AudioKit.MusicalDuration]
+  public typealias RawValue = Swift.Int
+  public static var allCases: [AudioKit.MusicalDuration] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+open class FFTTap : AudioKit.BaseTap {
+  open var fftData: [Swift.Float]
+  public typealias Handler = ([Swift.Float]) -> Swift.Void
+  public var isNormalized: Swift.Bool
+  public var zeroPaddingFactor: Swift.UInt32
+  public init(_ input: any AudioKit.Node, bufferSize: Swift.UInt32 = 4096, fftValidBinCount: AudioKit.FFTValidBinCount? = nil, callbackQueue: Dispatch.DispatchQueue = .main, handler: @escaping AudioKit.FFTTap.Handler)
+  override open func doHandleTapBlock(buffer: AVFAudio.AVAudioPCMBuffer, at time: AVFAudio.AVAudioTime)
+  override public func stop()
+  @objc deinit
+}
+public enum FFTValidBinCount : Swift.Double {
+  case two, four, eight, sixteen, thirtyTwo, sixtyFour, oneHundredTwentyEight, twoHundredFiftySix, fiveHundredAndTwelve, oneThousandAndTwentyFour, twoThousandAndFortyEight, fourThousandAndNintySix, eightThousandOneHundredAndNintyTwo
+  public init?(rawValue: Swift.Double)
+  public typealias RawValue = Swift.Double
+  public var rawValue: Swift.Double {
+    get
+  }
+}
+open class MusicTrackManager {
+  open var internalMusicTrack: AudioToolbox.MusicTrack?
+  open var initMusicTrack: AudioToolbox.MusicTrack?
+  open var name: Swift.String
+  open var sequencer: AudioKit.AppleSequencer
+  open var trackPointer: Swift.UnsafeMutablePointer<AudioToolbox.MusicTrack>?
+  open var initTrackPointer: Swift.UnsafeMutablePointer<AudioToolbox.MusicTrack>?
+  open var isNotEmpty: Swift.Bool {
+    get
+  }
+  open var length: AudioToolbox.MusicTimeStamp {
+    get
+  }
+  open var initLength: AudioToolbox.MusicTimeStamp {
+    get
+  }
+  public init(name: Swift.String = "Unnamed")
+  public init(musicTrack: AudioToolbox.MusicTrack, name: Swift.String = "Unnamed")
+  public init(musicTrack: AudioToolbox.MusicTrack, sequencer: AudioKit.AppleSequencer)
+  public func setNodeOutput(_ node: AudioToolbox.AUNode)
+  public func setLoopInfo(_ duration: AudioKit.Duration, loopCount: Swift.Int)
+  public func setLength(_ duration: AudioKit.Duration)
+  public func setLengthSoft(_ duration: AudioKit.Duration)
+  public func clear()
+  public func clearMetaEvents()
+  public func clearSysExEvents()
+  public func clearNote(_ note: AudioKit.MIDINoteNumber)
+  open var isEmpty: Swift.Bool {
+    get
+  }
+  public func clearRange(start: AudioKit.Duration, duration: AudioKit.Duration)
+  public func add(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, position: AudioKit.Duration, duration: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func add(midiNoteData: AudioKit.MIDINoteData)
+  public func replaceMIDINoteData(with trackMIDINoteData: [AudioKit.MIDINoteData])
+  public func addController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, position: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func addAftertouch(_ noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, position: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func addChannelAftertouch(pressure: AudioKit.MIDIByte, position: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func addSysEx(_ data: [AudioKit.MIDIByte], position: AudioKit.Duration)
+  public func addPitchBend(_ value: Swift.Int = 8192, position: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func resetPitchBend(position: AudioKit.Duration, channel: AudioKit.MIDIChannel = 0)
+  public func getMIDINoteData() -> [AudioKit.MIDINoteData]
+  public func copyAndMergeTo(musicTrack: AudioKit.MusicTrackManager)
+  public func copyOf() -> AudioKit.MusicTrackManager?
+  public func resetToInit()
+  @available(tvOS 12.0, *)
+  public func setMIDIOutput(_ endpoint: CoreMIDI.MIDIEndpointRef)
+  @objc deinit
+}
+public class TimePitch : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  public var rate: AudioKit.AUValue {
+    get
+    set
+  }
+  public var pitch: AudioKit.AUValue {
+    get
+    set
+  }
+  public var overlap: AudioKit.AUValue {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, rate: AudioKit.AUValue = 1.0, pitch: AudioKit.AUValue = 0.0, overlap: AudioKit.AUValue = 8.0)
+  @objc deinit
+}
+extension AudioKit.MIDI {
+  public var destinationUIDs: [CoreMIDI.MIDIUniqueID] {
+    get
+  }
+  public var destinationNames: [Swift.String] {
+    get
+  }
+  public var destinationRefs: [CoreMIDI.MIDIEndpointRef] {
+    get
+  }
+  public func destinationName(for destUid: CoreMIDI.MIDIUniqueID) -> Swift.String
+  public func uidForDestinationAtIndex(_ outputIndex: Swift.Int = 0) -> CoreMIDI.MIDIUniqueID
+  @available(*, deprecated, message: "Try to not use names any more because they are not unique across devices")
+  public func openOutput(name: Swift.String)
+  public func openOutput()
+  public func openOutput(index outputIndex: Swift.Int)
+  public func openOutput(uid outputUid: CoreMIDI.MIDIUniqueID)
+  public func closeOutput(name: Swift.String = "")
+  public func closeOutput(index outputIndex: Swift.Int)
+  public func closeOutput(uid outputUid: CoreMIDI.MIDIUniqueID)
+  public func clearEndpoints()
+  public func sendEvent(_ event: AudioKit.MIDIEvent, endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+  public func sendNoteOnMessage(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel = 0, time: CoreMIDI.MIDITimeStamp = mach_absolute_time(), endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+  public func sendNoteOffMessage(noteNumber: AudioKit.MIDINoteNumber, channel: AudioKit.MIDIChannel = 0, time: CoreMIDI.MIDITimeStamp = mach_absolute_time(), endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+  public func sendControllerMessage(_ control: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel = 0, endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+  public func sendPitchBendMessage(value: Swift.UInt16, channel: AudioKit.MIDIChannel = 0, endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+  public func sendMessage(_ data: [AudioKit.MIDIByte], time: CoreMIDI.MIDITimeStamp = mach_absolute_time(), endpointsUIDs: [CoreMIDI.MIDIUniqueID]? = nil, virtualOutputPorts: [CoreMIDI.MIDIPortRef]? = nil)
+}
+public enum MIDIControl : AudioKit.MIDIByte {
+  case modulationWheel
+  case breathControl
+  case footControl
+  case portamento
+  case dataEntry
+  case mainVolume
+  case balance
+  case pan
+  case expression
+  case damperOnOff
+  case portamentoOnOff
+  case sustenutoOnOff
+  case softPedalOnOff
+  case soundVariation
+  case resonance
+  case releaseTime
+  case attackTime
+  case cutoff
+  case soundControl6
+  case soundControl7
+  case soundControl8
+  case soundControl9
+  case soundControl10
+  case gpButton1
+  case gpButton2
+  case gpButton3
+  case gpButton4
+  case reverbLevel
+  case tremoloLevel
+  case chorusLevel
+  case celesteLevel
+  case phaserLevel
+  case dataEntryPlus
+  case dataEntryMinus
+  case NrpnLsb
+  case NrpnMsb
+  case RpnLsb
+  case RpnMsb
+  case allSoundsOff
+  case allControllersOff
+  case localControlOnOff
+  case allNotesOff
+  case omniModeOff
+  case omniModeOn
+  case monoOperation
+  case polyOperation
+  case cc0
+  case cc3
+  case cc9
+  case cc12
+  case cc13
+  case cc14
+  case cc15
+  case cc16
+  case cc17
+  case cc18
+  case cc19
+  case cc20
+  case cc21
+  case cc22
+  case cc23
+  case cc24
+  case cc25
+  case cc26
+  case cc27
+  case cc28
+  case cc29
+  case cc30
+  case cc31
+  case cc32
+  case modulationWheelLsb
+  case breathControllerLsb
+  case footControlLsb
+  case portamentoLsb
+  case dataEntryLsb
+  case mainVolumeLsb
+  case balanceLsb
+  case panLsb
+  case expressionLsb
+  case effectControl1Lsb
+  case effectControl2Lsb
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: AudioKit.MIDIByte)
+  public typealias RawValue = AudioKit.MIDIByte
+  public var rawValue: AudioKit.MIDIByte {
+    get
+  }
+}
+public enum TableType {
+  case sine
+  case triangle
+  case square
+  case sawtooth
+  case reverseSawtooth
+  case positiveSine
+  case positiveTriangle
+  case positiveSquare
+  case positiveSawtooth
+  case positiveReverseSawtooth
+  case harmonic([Swift.Float])
+  case zero
+  case custom
+}
+public class Table : Swift.MutableCollection {
+  public typealias Index = Swift.Int
+  public typealias IndexDistance = Swift.Int
+  public typealias Element = Swift.Float
+  public typealias SubSequence = Swift.ArraySlice<AudioKit.Table.Element>
+  public var content: [AudioKit.Table.Element] {
+    get
+  }
+  public var phase: Swift.Float {
+    get
+    set
+  }
+  public var startIndex: AudioKit.Table.Index {
+    get
+  }
+  public var endIndex: AudioKit.Table.Index {
+    get
+  }
+  public var count: AudioKit.Table.IndexDistance {
+    get
+  }
+  public subscript(index: AudioKit.Table.Index) -> AudioKit.Table.Element {
+    get
+    set
+  }
+  public subscript(bounds: Swift.Range<AudioKit.Table.Index>) -> AudioKit.Table.SubSequence {
+    get
+    set
+  }
+  public init(_ type: AudioKit.TableType = .sine, phase: Swift.Float = 0, count: AudioKit.Table.IndexDistance = 4096)
+  public init(_ content: [AudioKit.Table.Element], phase: Swift.Float = 0)
+  convenience public init?(file: AVFAudio.AVAudioFile)
+  convenience public init?(url: Foundation.URL) throws
+  public var phaseOffset: Swift.Int {
+    @inline(__always) get
+  }
+  public typealias Iterator = Swift.IndexingIterator<AudioKit.Table>
+  @objc deinit
+}
+extension AudioKit.Table : Swift.RandomAccessCollection {
+  public typealias Indices = Swift.Array<AudioKit.Table.Element>.Indices
+  @inline(__always) public func index(before i: AudioKit.Table.Index) -> AudioKit.Table.Index
+  @inline(__always) public func index(after i: AudioKit.Table.Index) -> AudioKit.Table.Index
+  @inline(__always) public func index(_ i: AudioKit.Table.Index, offsetBy n: AudioKit.Table.IndexDistance) -> AudioKit.Table.Index
+  @inline(__always) public func formIndex(after i: inout AudioKit.Table.Index)
+  @inline(__always) public func distance(from start: AudioKit.Table.Index, to end: AudioKit.Table.Index) -> AudioKit.Table.IndexDistance
+}
+public protocol Node : AnyObject {
+  var connections: [any AudioKit.Node] { get }
+  var avAudioNode: AVFAudio.AVAudioNode { get }
+  func start()
+  func stop()
+  func bypass()
+  var isStarted: Swift.Bool { get }
+  var outputFormat: AVFAudio.AVAudioFormat { get }
+}
+extension AudioKit.Node {
+  public func reset()
+  public func scheduleMIDIEvent(event: AudioKit.MIDIEvent, offset: Swift.UInt64 = 0)
+  public var isStarted: Swift.Bool {
+    get
+  }
+  public func start()
+  public func stop()
+  public func play()
+  public func bypass()
+  public var outputFormat: AVFAudio.AVAudioFormat {
+    get
+  }
+  public var parameters: [AudioKit.NodeParameter] {
+    get
+  }
+  public func setupParameters()
+}
+public protocol HasInternalConnections : AnyObject {
+  func makeInternalConnections()
+}
+public protocol DynamicWaveformNode : AudioKit.Node {
+  func setWaveform(_ waveform: AudioKit.Table)
+  func getWaveformValues() -> [Swift.Float]
+  func setWaveformUpdateHandler(_ handler: @escaping ([Swift.Float]) -> Swift.Void)
+}
+public typealias BPMType = Foundation.TimeInterval
+@objc public class MIDITempoListener : ObjectiveC.NSObject {
+  public var clockListener: AudioKit.MIDIClockListener?
+  public var srtListener: AudioKit.MIDISystemRealTimeListener
+  public var tempoString: Swift.String
+  public var tempo: Swift.Double
+  public var isIncomingClockActive: Swift.Bool
+  public init(smoothing: Swift.Float64 = 0.8, bpmHistoryLimit: Swift.Int = 3)
+  @objc deinit
+}
+extension AudioKit.MIDITempoListener {
+  public func analyze()
+  public func resetClockEventsLeavingOne()
+  public func resetClockEventsLeavingHalf()
+  public func resetClockEventsLeavingNone()
+}
+extension AudioKit.MIDITempoListener : AudioKit.MIDIListener {
+  public func receivedMIDISystemCommand(_ data: [AudioKit.MIDIByte], portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOn(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDINoteOff(noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIController(_ controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(noteNumber: AudioKit.MIDINoteNumber, pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIAftertouch(_ pressure: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIPitchWheel(_ pitchWheelValue: AudioKit.MIDIWord, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDIProgramChange(_ program: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel, portID: CoreMIDI.MIDIUniqueID? = nil, timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public func receivedMIDISetupChange()
+  public func receivedMIDIPropertyChange(propertyChangeInfo: CoreMIDI.MIDIObjectPropertyChangeNotification)
+  public func receivedMIDINotification(notification: CoreMIDI.MIDINotification)
+}
+extension AudioKit.MIDITempoListener {
+  public func addObserver(_ observer: any AudioKit.MIDITempoObserver)
+  public func removeObserver(_ observer: any AudioKit.MIDITempoObserver)
+  public func removeAllObservers()
+}
+extension AVFAudio.AVAudioPCMBuffer {
+  public func audition()
+}
+extension AudioKit.AudioEngine {
+  public var connectionTreeDescription: Swift.String {
+    get
+  }
+}
+public class DynamicsProcessor : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let thresholdDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($threshold) public var threshold: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $threshold: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let headRoomDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($headRoom) public var headRoom: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $headRoom: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let expansionRatioDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($expansionRatio) public var expansionRatio: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $expansionRatio: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let expansionThresholdDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($expansionThreshold) public var expansionThreshold: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $expansionThreshold: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let attackTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($attackTime) public var attackTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $attackTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let releaseTimeDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($releaseTime) public var releaseTime: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $releaseTime: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let masterGainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($masterGain) public var masterGain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $masterGain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public var compressionAmount: AudioKit.AUValue {
+    get
+  }
+  public var inputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public var outputAmplitude: AudioKit.AUValue {
+    get
+  }
+  public init(_ input: any AudioKit.Node, threshold: AudioKit.AUValue = thresholdDef.defaultValue, headRoom: AudioKit.AUValue = headRoomDef.defaultValue, expansionRatio: AudioKit.AUValue = expansionRatioDef.defaultValue, expansionThreshold: AudioKit.AUValue = expansionThresholdDef.defaultValue, attackTime: AudioKit.AUValue = attackTimeDef.defaultValue, releaseTime: AudioKit.AUValue = releaseTimeDef.defaultValue, masterGain: AudioKit.AUValue = masterGainDef.defaultValue)
+  @objc deinit
+}
+public struct MIDIFileTempoTrack {
+  public let track: AudioKit.MIDIFileTrack
+  public var length: Swift.Double {
+    get
+  }
+  public var name: Swift.String? {
+    get
+  }
+  public var events: [AudioKit.MIDIEvent] {
+    get
+  }
+  public var metaEvents: [AudioKit.MIDICustomMetaEvent] {
+    get
+  }
+  public var tempoData: [AudioKit.MIDIByte]
+  public var tempo: Swift.Float {
+    get
+  }
+}
+extension AudioKit.MIDIPlayer : Swift.Collection {
+  public typealias Element = AVFAudio.AVMusicTrack
+  public typealias Index = Swift.Int
+  public var startIndex: AudioKit.MIDIPlayer.Index {
+    get
+  }
+  public var endIndex: AudioKit.MIDIPlayer.Index {
+    get
+  }
+  public subscript(index: AudioKit.MIDIPlayer.Index) -> AudioKit.MIDIPlayer.Element {
+    get
+  }
+  public func index(after index: AudioKit.MIDIPlayer.Index) -> AudioKit.MIDIPlayer.Index
+  public func rewind()
+  public typealias Indices = Swift.DefaultIndices<AudioKit.MIDIPlayer>
+  public typealias Iterator = Swift.IndexingIterator<AudioKit.MIDIPlayer>
+  public typealias SubSequence = Swift.Slice<AudioKit.MIDIPlayer>
+}
+@objc public class MIDIPlayer : AVFAudio.AVAudioSequencer {
+  public var tempo: Swift.Double
+  public var loopEnabled: Swift.Bool
+  public init(audioEngine: AVFAudio.AVAudioEngine, filename: Swift.String)
+  public func sequence(from data: Foundation.Data)
+  public func toggleLoop()
+  public func enableLooping()
+  public func enableLooping(_ loopLength: AudioKit.Duration)
+  public func disableLooping()
+  public var length: AudioKit.Duration {
+    get
+    set
+  }
+  public func play()
+  public func setGlobalAVAudioUnitOutput(_ audioUnit: AVFAudio.AVAudioUnit)
+  public var currentPosition: AudioKit.Duration {
+    get
+  }
+  public var currentRelativePosition: AudioKit.Duration {
+    get
+  }
+  public func loadMIDIFile(_ filename: Swift.String)
+  public func setGlobalMIDIOutput(_ midiEndpoint: CoreMIDI.MIDIEndpointRef)
+  @objc deinit
+}
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, *)
+public class PlaygroundOscillator : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var frequency: Swift.Float
+  public var amplitude: AudioKit.AUValue
+  public init(waveform: AudioKit.Table = Table(.sine), frequency: AudioKit.AUValue = 440, amplitude: AudioKit.AUValue = 1)
+  @objc deinit
+}
+public enum DisconnectStrategy {
+  case recursive
+  case detach
+  public static func == (a: AudioKit.DisconnectStrategy, b: AudioKit.DisconnectStrategy) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension AudioKit.Node {
+  public func detach()
+}
+public struct MIDISysExMessage : AudioKit.MIDIMessage {
+  public let data: [AudioKit.MIDIByte]
+  public let length: Swift.Int
+  public var description: Swift.String {
+    get
+  }
+  public init?(bytes: [AudioKit.MIDIByte])
+}
+public struct EndpointInfo : Swift.Hashable, Swift.Codable {
+  public var name: Swift.String
+  public var displayName: Swift.String
+  public var model: Swift.String
+  public var manufacturer: Swift.String
+  public var image: Swift.String
+  public var driverOwner: Swift.String
+  public var midiUniqueID: CoreMIDI.MIDIUniqueID
+  public var midiEndpointRef: CoreMIDI.MIDIEndpointRef
+  public var midiPortRef: CoreMIDI.MIDIPortRef?
+  public static func == (lhs: AudioKit.EndpointInfo, rhs: AudioKit.EndpointInfo) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public init(name: Swift.String, displayName: Swift.String, model: Swift.String, manufacturer: Swift.String, image: Swift.String, driverOwner: Swift.String, midiUniqueID: CoreMIDI.MIDIUniqueID, midiEndpointRef: CoreMIDI.MIDIEndpointRef, midiPortRef: CoreMIDI.MIDIPortRef? = nil)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+extension AudioKit.MIDI {
+  public var destinationInfos: [AudioKit.EndpointInfo] {
+    get
+  }
+  public var inputInfos: [AudioKit.EndpointInfo] {
+    get
+  }
+  public var virtualOutputInfos: [AudioKit.EndpointInfo] {
+    get
+  }
+  public var virtualInputInfos: [AudioKit.EndpointInfo] {
+    get
+  }
+}
+public struct TimeSignature : Swift.CustomStringConvertible, Swift.Equatable {
+  public enum TimeSignatureBottomValue : Swift.UInt8 {
+    case two
+    case four
+    case eight
+    case sixteen
+    public init?(rawValue: Swift.UInt8)
+    public typealias RawValue = Swift.UInt8
+    public var rawValue: Swift.UInt8 {
+      get
+    }
+  }
+  public var topValue: Swift.UInt8
+  public var bottomValue: AudioKit.TimeSignature.TimeSignatureBottomValue
+  public init(topValue: Swift.UInt8 = 4, bottomValue: AudioKit.TimeSignature.TimeSignatureBottomValue = .four)
+  public var readableTimeSignature: (Swift.Int, Swift.Int) {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: AudioKit.TimeSignature, b: AudioKit.TimeSignature) -> Swift.Bool
+}
+extension AVFAudio.AVAudioEnvironmentNode {
+  public func connectMixer3D(_ input: AVFAudio.AVAudioNode, format: AVFAudio.AVAudioFormat)
+}
+public class EnvironmentalNode : AudioKit.Node, AudioKit.NamedNode {
+  public var avAudioEnvironmentNode: AVFAudio.AVAudioEnvironmentNode {
+    get
+  }
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  open var name: Swift.String
+  public var listenerPosition: AVFAudio.AVAudio3DPoint {
+    get
+    set
+  }
+  public var listenerAngularOrientation: AVFAudio.AVAudio3DAngularOrientation {
+    get
+    set
+  }
+  public var listenerVectorOrientation: AVFAudio.AVAudio3DVectorOrientation {
+    get
+    set
+  }
+  public var distanceAttenuationParameters: AVFAudio.AVAudioEnvironmentDistanceAttenuationParameters {
+    get
+  }
+  public var reverbParameters: AVFAudio.AVAudioEnvironmentReverbParameters {
+    get
+  }
+  public var reverbBlend: Swift.Float {
+    get
+    set
+  }
+  public var outputVolume: Swift.Float {
+    get
+    set
+  }
+  public var outputType: AVFAudio.AVAudioEnvironmentOutputType {
+    get
+    set
+  }
+  public var applicableRenderingAlgorithms: [Foundation.NSNumber] {
+    get
+  }
+  public var renderingAlgorithm: AVFAudio.AVAudio3DMixingRenderingAlgorithm {
+    get
+    set
+  }
+  public var nextAvailableInputBus: AVFAudio.AVAudioNodeBus {
+    get
+  }
+  public init()
+  public func connect(mixer3D: AudioKit.Mixer3D)
+  public func removeInputs()
+  @objc deinit
+}
+public struct MemoryAddress : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public init(of classInstance: Swift.AnyObject)
+}
+public class AudioPlayer : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var playerNode: AVFAudio.AVAudioPlayerNode {
+    get
+  }
+  public var mixerNode: AVFAudio.AVAudioMixerNode {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var volume: AudioKit.AUValue {
+    get
+    set
+  }
+  public var status: AudioKit.NodeStatus.Playback {
+    get
+  }
+  public var isPlaying: Swift.Bool {
+    get
+  }
+  public var isBuffered: Swift.Bool {
+    get
+    set
+  }
+  public var isReversed: Swift.Bool {
+    get
+    set
+  }
+  public var isLooping: Swift.Bool {
+    get
+    set
+  }
+  public var isSeeking: Swift.Bool {
+    get
+  }
+  public var duration: Foundation.TimeInterval {
+    get
+  }
+  public var completionHandler: AVFAudio.AVAudioNodeCompletionHandler?
+  public var file: AVFAudio.AVAudioFile? {
+    get
+    set
+  }
+  public var buffer: AVFAudio.AVAudioPCMBuffer? {
+    get
+    set
+  }
+  public var isEditTimeEnabled: Swift.Bool {
+    get
+    set(preference)
+  }
+  public var editStartTime: Foundation.TimeInterval {
+    get
+    set
+  }
+  public var editEndTime: Foundation.TimeInterval {
+    get
+    set
+  }
+  public init()
+  public init?(file: AVFAudio.AVAudioFile, buffered: Swift.Bool? = nil)
+  convenience public init?(url: Foundation.URL, buffered: Swift.Bool? = nil)
+  convenience public init?(buffer: AVFAudio.AVAudioPCMBuffer)
+  @objc deinit
+  public func load(url: Foundation.URL, buffered: Swift.Bool? = nil) throws
+  public func load(file: AVFAudio.AVAudioFile, buffered: Swift.Bool? = nil, preserveEditTime: Swift.Bool = false) throws
+  public func load(buffer: AVFAudio.AVAudioPCMBuffer)
+}
+extension AudioKit.AudioPlayer : AudioKit.HasInternalConnections {
+  public func makeInternalConnections()
+}
+public typealias AUValue = Swift.Float
+public typealias MIDIByte = Swift.UInt8
+public typealias MIDIWord = Swift.UInt16
+public typealias MIDINoteNumber = Swift.UInt8
+public typealias MIDIVelocity = Swift.UInt8
+public typealias MIDIChannel = Swift.UInt8
+public typealias SampleIndex = Swift.UInt32
+public let noteOnByte: AudioKit.MIDIByte
+public let noteOffByte: AudioKit.MIDIByte
+public typealias FloatChannelData = [[Swift.Float]]
+public typealias CVoidCallback = @convention(block) () -> Swift.Void
+public typealias CMIDICallback = @convention(block) (AudioKit.MIDIByte, AudioKit.MIDIByte, AudioKit.MIDIByte) -> Swift.Void
+extension AudioToolbox.AudioUnitParameterOptions {
+  public static let `default`: AudioToolbox.AudioUnitParameterOptions
+}
+public func fourCC(_ string: Swift.String) -> Swift.UInt32
+extension Swift.Float {
+  public func normalized(from range: Swift.ClosedRange<AudioKit.AUValue>, taper: AudioKit.AUValue = 1) -> AudioKit.AUValue
+  public func denormalized(to range: Swift.ClosedRange<AudioKit.AUValue>, taper: AudioKit.AUValue = 1) -> AudioKit.AUValue
+}
+extension Swift.Int {
+  public func midiNoteToFrequency(_ aRef: AudioKit.AUValue = 440.0) -> AudioKit.AUValue
+}
+extension Swift.UInt8 {
+  public func midiNoteToFrequency(_ aRef: AudioKit.AUValue = 440.0) -> AudioKit.AUValue
+}
+extension Swift.Float {
+  public func midiNoteToFrequency(_ aRef: AudioKit.AUValue = 440.0) -> AudioKit.AUValue
+}
+extension Swift.Int {
+  public func frequencyToMIDINote(_ aRef: AudioKit.AUValue = 440.0) -> AudioKit.AUValue
+}
+extension Swift.Float {
+  public func frequencyToMIDINote(_ aRef: AudioKit.AUValue = 440.0) -> AudioKit.AUValue
+}
+extension Swift.RangeReplaceableCollection where Self.Element : Swift.ExpressibleByIntegerLiteral {
+  public init(zeros count: Swift.Int)
+}
+extension AVFAudio.AVAudioNode {
+  public var inputCount: Swift.Int {
+    get
+  }
+}
+extension AudioToolbox.AUParameterTree {
+  public class func createParameter(identifier: Swift.String, name: Swift.String, address: AudioToolbox.AUParameterAddress, range: Swift.ClosedRange<AudioKit.AUValue>, unit: AudioToolbox.AudioUnitParameterUnit, flags: AudioToolbox.AudioUnitParameterOptions) -> AudioToolbox.AUParameter
+}
+public protocol Occupiable {
+  var isEmpty: Swift.Bool { get }
+  var isNotEmpty: Swift.Bool { get }
+}
+extension AudioKit.Occupiable {
+  public var isNotEmpty: Swift.Bool {
+    get
+  }
+}
+extension Swift.String : AudioKit.Occupiable {
+}
+extension Swift.Array : AudioKit.Occupiable {
+}
+extension Swift.Dictionary : AudioKit.Occupiable {
+}
+extension Swift.Set : AudioKit.Occupiable {
+}
+extension AVFAudio.AVAudioSession.CategoryOptions : AudioKit.Occupiable {
+}
+extension Swift.Sequence where Self.Element : Swift.Equatable {
+  @inline(__always) public func doesNotContain(_ member: Self.Element) -> Swift.Bool
+}
+extension Swift.String {
+  public func titleCase() -> Swift.String
+}
+extension Swift.Double {
+  public func mapped(from source: Swift.ClosedRange<Swift.Double> = 0 ... 1.0, to target: Swift.ClosedRange<Swift.Double> = 0 ... 1.0) -> Swift.Double
+  public var isValidSampleRate: Swift.Bool {
+    get
+  }
+}
+extension CoreFoundation.CGFloat {
+  public func mapped(from source: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0, to target: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0) -> CoreFoundation.CGFloat
+  public func mappedInverted(from source: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0, to target: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0) -> CoreFoundation.CGFloat
+  public func mappedLog10(from source: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0, to target: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0) -> CoreFoundation.CGFloat
+  public func mappedExp(from source: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0, to target: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0) -> CoreFoundation.CGFloat
+}
+extension Swift.Int {
+  public func mapped(from source: Swift.ClosedRange<Swift.Int>, to target: Swift.ClosedRange<CoreFoundation.CGFloat> = 0 ... 1.0) -> CoreFoundation.CGFloat
+}
+extension Swift.Array where Element == Swift.Float {
+  public func downSample(to sampleCount: Swift.Int = 128) -> [Element]
+}
+public func loadAudioSignal(audioURL: Foundation.URL) -> (signal: [Swift.Float], rate: Swift.Double, frameCount: Swift.Int)?
+extension Accelerate.DSPSplitComplex {
+  public init(repeating initialValue: Swift.Float, count: Swift.Int)
+  public init(repeatingReal: Swift.Float, repeatingImag: Swift.Float, count: Swift.Int)
+  public func deallocate()
+}
+extension AVFAudio.AVAudioTime {
+  public static func sampleTimeZero(sampleRate: Swift.Double = Settings.sampleRate) -> AVFAudio.AVAudioTime
+}
+public protocol ProcessesPlayerInput : AudioKit.HasAudioEngine {
+  var player: AudioKit.AudioPlayer { get }
+}
+public protocol HasAudioEngine {
+  var engine: AudioKit.AudioEngine { get }
+}
+extension AudioKit.HasAudioEngine {
+  public func start()
+  public func stop()
+}
+public enum MIDISystemCommand : AudioKit.MIDIByte, AudioKit.MIDIMessage {
+  case sysEx
+  case timeCodeQuarterFrame
+  case songPosition
+  case songSelect
+  case tuneRequest
+  case sysExEnd
+  case clock
+  case start
+  case `continue`
+  case stop
+  case activeSensing
+  case sysReset
+  public var description: Swift.String {
+    get
+  }
+  public var byte: AudioKit.MIDIByte {
+    get
+  }
+  public var data: [AudioKit.MIDIByte] {
+    get
+  }
+  public init?(rawValue: AudioKit.MIDIByte)
+  public typealias RawValue = AudioKit.MIDIByte
+  public var rawValue: AudioKit.MIDIByte {
+    get
+  }
+}
+public enum MIDISystemCommandType {
+  case systemRealtime
+  case systemCommon
+  case systemExclusive
+  public static func == (a: AudioKit.MIDISystemCommandType, b: AudioKit.MIDISystemCommandType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public class WaveformDataRequest {
+  public var audioFile: AVFAudio.AVAudioFile? {
+    get
+  }
+  public var abortGetWaveformData: Swift.Bool {
+    get
+    set
+  }
+  public init(audioFile: AVFAudio.AVAudioFile)
+  public init(url: Foundation.URL) throws
+  @objc deinit
+  public func getDataAsync(with samplesPerPixel: Swift.Int, offset: Swift.Int? = 0, length: Swift.UInt? = nil, queue: Dispatch.DispatchQueue = DispatchQueue.global(qos: .userInitiated), completionHandler: @escaping ((AudioKit.FloatChannelData?) -> Swift.Void))
+  public func getData(with samplesPerPixel: Swift.Int, offset: Swift.Int? = 0, length: Swift.UInt? = nil) -> AudioKit.FloatChannelData?
+  public func cancel()
+}
+final public class MultiChannelInputNodeTap {
+  public struct FileChannel {
+    public var name: Swift.String
+    public var channel: Swift.Int32
+    public init(name: Swift.String, channel: Swift.Int32)
+  }
+  weak final public var delegate: (any AudioKit.MultiChannelInputNodeTapDelegate)?
+  final public var fileChannels: [AudioKit.MultiChannelInputNodeTap.FileChannel]? {
+    get
+  }
+  @AudioKit.ThreadLockedAccessor final public var files: [AudioKit.MultiChannelInputNodeTap.WriteableFile] {
+    get
+    set
+    _modify
+  }
+  final public var inputNode: AVFAudio.AVAudioInputNode? {
+    get
+  }
+  final public var isRecording: Swift.Bool {
+    get
+  }
+  final public var recordFileType: Swift.String {
+    get
+  }
+  final public var recordFormat: AVFAudio.AVAudioFormat? {
+    get
+  }
+  final public var bufferFormat: AVFAudio.AVAudioFormat? {
+    get
+  }
+  final public var fileFormat: AVFAudio.AVAudioFormat? {
+    get
+  }
+  final public var sampleRate: Swift.Double {
+    get
+  }
+  final public var channels: Swift.UInt32 {
+    get
+  }
+  final public var bitsPerChannel: Swift.UInt32 {
+    get
+  }
+  final public var bufferSize: AVFAudio.AVAudioFrameCount {
+    get
+    set
+  }
+  final public var recordEnabled: Swift.Bool {
+    get
+    set
+  }
+  final public var directory: Foundation.URL?
+  final public var recordCounter: Swift.Int {
+    get
+    set
+  }
+  final public var startedAtTime: AVFAudio.AVAudioTime? {
+    get
+  }
+  final public var stoppedAtTime: AVFAudio.AVAudioTime? {
+    get
+  }
+  final public var durationRecorded: Foundation.TimeInterval? {
+    get
+  }
+  final public var ioLatency: AVFAudio.AVAudioFrameCount
+  public init(inputNode: AVFAudio.AVAudioInputNode)
+  @objc deinit
+  final public func prepare(channelMap: [Swift.Int32])
+  final public func prepare(fileChannels: [AudioKit.MultiChannelInputNodeTap.FileChannel])
+  final public func record()
+  final public func stop()
+}
+public protocol MultiChannelInputNodeTapDelegate : AnyObject {
+  func tapInstalled(sender: AudioKit.MultiChannelInputNodeTap)
+  func tapRemoved(sender: AudioKit.MultiChannelInputNodeTap)
+  func dataProcessed(sender: AudioKit.MultiChannelInputNodeTap, frameLength: AVFAudio.AVAudioFrameCount, time: AVFAudio.AVAudioTime)
+}
+public enum ConnectStrategy {
+  case complete
+  case incremental
+  public static func == (a: AudioKit.ConnectStrategy, b: AudioKit.ConnectStrategy) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol MIDIBeatObserver {
+  func preparePlay(continue: Swift.Bool)
+  func startFirstBeat(continue: Swift.Bool)
+  func stopSRT()
+  func receivedBeatEvent(beat: Swift.UInt64)
+  func receivedQuantum(time: CoreMIDI.MIDITimeStamp, quarterNote: AudioKit.MIDIByte, beat: Swift.UInt64, quantum: Swift.UInt64)
+  func receivedQuarterNoteBeat(quarterNote: AudioKit.MIDIByte)
+}
+extension AudioKit.MIDIBeatObserver {
+  public func preparePlay(continue: Swift.Bool)
+  public func startFirstBeat(continue: Swift.Bool)
+  public func stopSRT()
+  public func receivedBeatEvent(beat: Swift.UInt64)
+  public func receivedQuantum(time: CoreMIDI.MIDITimeStamp, quarterNote: AudioKit.MIDIByte, beat: Swift.UInt64, quantum: Swift.UInt64)
+  public func receivedQuarterNoteBeat(quarterNote: AudioKit.MIDIByte)
+  public func isEqualTo(_ listener: any AudioKit.MIDIBeatObserver) -> Swift.Bool
+}
+public struct MIDIEvent : AudioKit.MIDIMessage, Swift.Equatable {
+  public var data: [AudioKit.MIDIByte]
+  public var positionInBeats: Swift.Double?
+  public var offset: CoreMIDI.MIDITimeStamp?
+  public var timeStamp: CoreMIDI.MIDITimeStamp?
+  public var description: Swift.String {
+    get
+  }
+  public var internalPackets: [[AudioKit.MIDIByte]] {
+    get
+  }
+  public var length: Swift.Int {
+    get
+  }
+  public var status: AudioKit.MIDIStatus? {
+    get
+  }
+  public var command: AudioKit.MIDISystemCommand? {
+    get
+  }
+  public var channel: AudioKit.MIDIChannel? {
+    get
+  }
+  public var noteNumber: AudioKit.MIDINoteNumber? {
+    get
+  }
+  public var pitchbendAmount: AudioKit.MIDIWord? {
+    get
+  }
+  public init(packet: CoreMIDI.MIDIPacket)
+  public init(data: [AudioKit.MIDIByte], timeStamp: CoreMIDI.MIDITimeStamp? = nil)
+  public init(command: AudioKit.MIDISystemCommand, byte1: AudioKit.MIDIByte, byte2: AudioKit.MIDIByte? = nil)
+  public init(noteOn noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel)
+  public init(noteOff noteNumber: AudioKit.MIDINoteNumber, velocity: AudioKit.MIDIVelocity, channel: AudioKit.MIDIChannel)
+  public init(programChange data: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel)
+  public init(controllerChange controller: AudioKit.MIDIByte, value: AudioKit.MIDIByte, channel: AudioKit.MIDIChannel)
+  public static func midiEventsFrom(packetListPointer: Swift.UnsafePointer<CoreMIDI.MIDIPacketList>) -> [AudioKit.MIDIEvent]
+  public static func generateFrom(bluetoothData: [AudioKit.MIDIByte]) -> [AudioKit.MIDIEvent]
+  public static func == (a: AudioKit.MIDIEvent, b: AudioKit.MIDIEvent) -> Swift.Bool
+}
+@_hasMissingDesignatedInitializers public class PresetBuilder {
+  public static func createAUPreset(dict: [Foundation.NSMutableDictionary], path: Swift.String, instrumentName: Swift.String, attack: Swift.Double? = 0, release: Swift.Double? = 0)
+  public static func generateDictionary(rootNote: Swift.Int, filename: Swift.String, startNote: Swift.Int, endNote: Swift.Int) -> Foundation.NSMutableDictionary
+  public static func buildInstrument(name: Swift.String = "Coded Instrument Name", connections: Swift.String = "", envelopes: Swift.String = "", filter: Swift.String = "", lfos: Swift.String = "", zones: Swift.String = "***ZONES***\n", filerefs: Swift.String = "***FILEREFS***\n", layers: Swift.String = "") -> Swift.String
+  @objc deinit
+}
+public enum SampleTriggerMode : Swift.String {
+  case Hold
+  case Trigger
+  case Loop
+  case Repeat
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension AudioKit.Node {
+  public var label: Swift.String {
+    get
+    set
+  }
+  public var graphviz: Swift.String {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class Mixer3D : AudioKit.Mixer {
+  public var obstruction: Swift.Float {
+    get
+    set
+  }
+  public var occlusion: Swift.Float {
+    get
+    set
+  }
+  public var position: AVFAudio.AVAudio3DPoint {
+    get
+    set
+  }
+  public var rate: Swift.Float {
+    get
+    set
+  }
+  public var pointSourceInHeadMode: AVFAudio.AVAudio3DMixingPointSourceInHeadMode {
+    get
+    set
+  }
+  public var reverbBlend: Swift.Float {
+    get
+    set
+  }
+  public var sourceMode: AVFAudio.AVAudio3DMixingSourceMode {
+    get
+    set
+  }
+  public var renderingAlgorithm: AVFAudio.AVAudio3DMixingRenderingAlgorithm {
+    get
+    set
+  }
+  @objc deinit
+}
+extension AudioKit.MIDI {
+  public func addListener(_ listener: any AudioKit.MIDIListener)
+  public func removeListener(_ listener: any AudioKit.MIDIListener)
+  public func clearListeners()
+}
+extension AudioKit.MIDI {
+  public func addTransformer(_ transformer: any AudioKit.MIDITransformer)
+  public func removeTransformer(_ transformer: any AudioKit.MIDITransformer)
+  public func clearTransformers()
+}
+extension AudioKit.MIDI {
+  public var inputUIDs: [CoreMIDI.MIDIUniqueID] {
+    get
+  }
+  public var inputNames: [Swift.String] {
+    get
+  }
+  public var inputRefs: [CoreMIDI.MIDIEndpointRef] {
+    get
+  }
+  public func inputName(for inputUid: CoreMIDI.MIDIUniqueID) -> Swift.String?
+  public func uidForInputAtIndex(_ inputIndex: Swift.Int = 0) -> CoreMIDI.MIDIUniqueID
+  public func openInput(name: Swift.String = "")
+  public func openInput(index inputIndex: Swift.Int)
+  public func openInput(uid inputUID: CoreMIDI.MIDIUniqueID)
+  @available(*, deprecated, message: "Try to not use names any more because they are not unique across devices")
+  public func closeInput(name: Swift.String)
+  public func closeInput()
+  public func closeInput(index inputIndex: Swift.Int)
+  public func closeInput(uid inputUID: CoreMIDI.MIDIUniqueID)
+  public func closeAllInputs()
+}
+public class HighPassFilter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let cutoffFrequencyDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($cutoffFrequency) public var cutoffFrequency: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $cutoffFrequency: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let resonanceDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($resonance) public var resonance: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $resonance: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, cutoffFrequency: AudioKit.AUValue = cutoffFrequencyDef.defaultValue, resonance: AudioKit.AUValue = resonanceDef.defaultValue)
+  @objc deinit
+}
+public struct MIDIFile {
+  public var filename: Swift.String
+  public var trackChunks: [AudioKit.MIDIFileTrackChunk] {
+    get
+  }
+  public var tempoTrack: AudioKit.MIDIFileTempoTrack? {
+    get
+  }
+  public var tracks: [AudioKit.MIDIFileTrack] {
+    get
+  }
+  public var format: Swift.Int {
+    get
+  }
+  public var trackCount: Swift.Int {
+    get
+  }
+  public var timeFormat: AudioKit.MIDITimeFormat? {
+    get
+  }
+  public var ticksPerBeat: Swift.Int? {
+    get
+  }
+  public var framesPerSecond: Swift.Int? {
+    get
+  }
+  public var ticksPerFrame: Swift.Int? {
+    get
+  }
+  public var timeDivision: Swift.UInt16 {
+    get
+  }
+  public init(url: Foundation.URL)
+  public init(path: Swift.String)
+}
+extension AudioKit.MusicTrackManager {
+  public var eventData: [AudioKit.AppleMIDIEvent]? {
+    get
+  }
+  public var noteData: [AudioKit.AppleMIDIEvent]? {
+    get
+  }
+  public var programChangeEvents: [AudioKit.MIDIProgramChangeEvent] {
+    get
+  }
+  public func debug()
+}
+public struct AppleMIDIEvent {
+  public var time: AudioToolbox.MusicTimeStamp
+  public var type: AudioToolbox.MusicEventType
+  public var data: Swift.UnsafeRawPointer?
+  public var dataSize: Swift.UInt32
+}
+public struct MIDIProgramChangeEvent {
+  public var time: AudioToolbox.MusicTimeStamp
+  public var channel: AudioKit.MIDIChannel
+  public var number: AudioKit.MIDIByte
+}
+public class HighShelfFilter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let cutOffFrequencyDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($cutOffFrequency) public var cutOffFrequency: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $cutOffFrequency: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let gainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($gain) public var gain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $gain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, cutOffFrequency: AudioKit.AUValue = cutOffFrequencyDef.defaultValue, gain: AudioKit.AUValue = gainDef.defaultValue)
+  @objc deinit
+}
+public class LowShelfFilter : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public static let cutoffFrequencyDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($cutoffFrequency) public var cutoffFrequency: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $cutoffFrequency: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public static let gainDef: AudioKit.NodeParameterDef
+  @AudioKit.Parameter @_projectedValueProperty($gain) public var gain: AudioKit.AUValue {
+    get
+    set
+    _modify
+  }
+  public var $gain: AudioKit.NodeParameter {
+    get
+    set
+  }
+  public init(_ input: any AudioKit.Node, cutoffFrequency: AudioKit.AUValue = cutoffFrequencyDef.defaultValue, gain: AudioKit.AUValue = gainDef.defaultValue)
+  @objc deinit
+}
+public protocol MIDIMessage {
+  var data: [AudioKit.MIDIByte] { get }
+  var description: Swift.String { get }
+}
+public class MatrixMixer : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode {
+    get
+  }
+  public var outputFormat: AVFAudio.AVAudioFormat
+  final public let unit: AVFAudio.AVAudioUnit
+  public init(_ inputs: [any AudioKit.Node])
+  public var masterVolume: Swift.Float {
+    get
+    set
+  }
+  public func unmuteAllInputsAndOutputs()
+  public func set(volume: Swift.Float, inputChannelIndex: Swift.Int)
+  public func set(volume: Swift.Float, outputChannelIndex: Swift.Int)
+  public func set(volume: Swift.Float, atCrosspoints crosspoints: [(Swift.Int, Swift.Int)])
+  public var inputChannelCount: AVFAudio.AVAudioChannelCount {
+    get
+  }
+  public var outputChannelCount: AVFAudio.AVAudioChannelCount {
+    get
+  }
+  public var matrixLevels: [[Swift.Float32]] {
+    get
+  }
+  public func printMatrixLevels()
+  @objc deinit
+}
+public class Reverb : AudioKit.Node {
+  public var connections: [any AudioKit.Node] {
+    get
+  }
+  public var avAudioNode: AVFAudio.AVAudioNode
+  public func start()
+  public func stop()
+  public func play()
+  public func bypass()
+  public var dryWetMix: AudioKit.AUValue {
+    get
+    set
+  }
+  public var isStarted: Swift.Bool
+  public init(_ input: any AudioKit.Node, dryWetMix: AudioKit.AUValue = 0.5)
+  public func loadFactoryPreset(_ preset: AVFAudio.AVAudioUnitReverbPreset)
+  @objc deinit
+}
+extension AVFAudio.AVAudioUnitReverbPreset {
+  public static var allCases: [AVFAudio.AVAudioUnitReverbPreset]
+  public var name: Swift.String {
+    get
+  }
+  public static var defaultValue: AVFAudio.AVAudioUnitReverbPreset {
+    get
+  }
+  public var next: AVFAudio.AVAudioUnitReverbPreset {
+    get
+  }
+  public var previous: AVFAudio.AVAudioUnitReverbPreset {
+    get
+  }
+}
+extension AudioToolbox.AUParameterTree {
+  public subscript(key: Swift.String) -> AudioToolbox.AUParameter? {
+    get
+  }
+}
+extension AudioToolbox.AudioComponentDescription {
+  public init(type: Darwin.OSType, subType: Darwin.OSType)
+  public init(appleEffect subType: Darwin.OSType)
+  public init(effect subType: Darwin.OSType)
+  public init(effect subType: Swift.String)
+  public init(nonRealTimeEffect subType: Darwin.OSType)
+  public init(nonRealTimeEffect subType: Swift.String)
+  public init(mixer subType: Swift.String)
+  public init(generator subType: Swift.String)
+  public init(instrument subType: Swift.String)
+}
+extension AudioKit.MIDISystemRealTimeListener.SRTState : Swift.Equatable {}
+extension AudioKit.MIDISystemRealTimeListener.SRTState : Swift.Hashable {}
+extension AudioKit.AudioFileFormat : Swift.Equatable {}
+extension AudioKit.AudioFileFormat : Swift.Hashable {}
+extension AudioKit.AudioFileFormat : Swift.RawRepresentable {}
+extension AudioKit.FormatConverter.BitDepthRule : Swift.Equatable {}
+extension AudioKit.FormatConverter.BitDepthRule : Swift.Hashable {}
+extension AudioKit.MIDIFileChunkType : Swift.Equatable {}
+extension AudioKit.MIDIFileChunkType : Swift.Hashable {}
+extension AudioKit.MIDIFileChunkType : Swift.RawRepresentable {}
+extension AudioKit.AnalysisMode : Swift.Equatable {}
+extension AudioKit.AnalysisMode : Swift.Hashable {}
+extension AudioKit.StereoMode : Swift.Equatable {}
+extension AudioKit.StereoMode : Swift.Hashable {}
+extension AudioKit.MIDITimeFormat : Swift.Equatable {}
+extension AudioKit.MIDITimeFormat : Swift.Hashable {}
+extension AudioKit.MIDITimeFormat : Swift.RawRepresentable {}
+extension AudioKit.Settings.BufferLength : Swift.Equatable {}
+extension AudioKit.Settings.BufferLength : Swift.Hashable {}
+extension AudioKit.Settings.BufferLength : Swift.RawRepresentable {}
+extension AudioKit.Settings.SessionCategory : Swift.Equatable {}
+extension AudioKit.Settings.SessionCategory : Swift.Hashable {}
+extension AudioKit.Settings.SessionCategory : Swift.RawRepresentable {}
+extension AudioKit.MIDIStatusType : Swift.Equatable {}
+extension AudioKit.MIDIStatusType : Swift.Hashable {}
+extension AudioKit.MIDIStatusType : Swift.RawRepresentable {}
+extension AudioKit.NodeStatus.Playback : Swift.Equatable {}
+extension AudioKit.NodeStatus.Playback : Swift.Hashable {}
+extension AudioKit.MIDICustomMetaEventType : Swift.Equatable {}
+extension AudioKit.MIDICustomMetaEventType : Swift.Hashable {}
+extension AudioKit.MIDICustomMetaEventType : Swift.RawRepresentable {}
+extension AudioKit.MusicalDuration : Swift.Equatable {}
+extension AudioKit.MusicalDuration : Swift.Hashable {}
+extension AudioKit.MusicalDuration : Swift.RawRepresentable {}
+extension AudioKit.FFTValidBinCount : Swift.Equatable {}
+extension AudioKit.FFTValidBinCount : Swift.Hashable {}
+extension AudioKit.FFTValidBinCount : Swift.RawRepresentable {}
+extension AudioKit.MIDIControl : Swift.Equatable {}
+extension AudioKit.MIDIControl : Swift.Hashable {}
+extension AudioKit.MIDIControl : Swift.RawRepresentable {}
+extension AudioKit.DisconnectStrategy : Swift.Equatable {}
+extension AudioKit.DisconnectStrategy : Swift.Hashable {}
+extension AudioKit.TimeSignature.TimeSignatureBottomValue : Swift.Equatable {}
+extension AudioKit.TimeSignature.TimeSignatureBottomValue : Swift.Hashable {}
+extension AudioKit.TimeSignature.TimeSignatureBottomValue : Swift.RawRepresentable {}
+extension AudioKit.MIDISystemCommand : Swift.Equatable {}
+extension AudioKit.MIDISystemCommand : Swift.Hashable {}
+extension AudioKit.MIDISystemCommand : Swift.RawRepresentable {}
+extension AudioKit.MIDISystemCommandType : Swift.Equatable {}
+extension AudioKit.MIDISystemCommandType : Swift.Hashable {}
+extension AudioKit.ConnectStrategy : Swift.Equatable {}
+extension AudioKit.ConnectStrategy : Swift.Hashable {}
+extension AudioKit.SampleTriggerMode : Swift.Equatable {}
+extension AudioKit.SampleTriggerMode : Swift.Hashable {}
+extension AudioKit.SampleTriggerMode : Swift.RawRepresentable {}
